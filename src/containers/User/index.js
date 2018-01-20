@@ -26,7 +26,7 @@ export default class User extends React.Component {
 
   manageAddress = () => {
     const { navigation } = this.props
-    navigation.navigate('AddressList')
+    navigation.navigate('AddressList',{from: 'User'})
   }
   render() {
     return (
@@ -71,17 +71,24 @@ export default class User extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.listCell}
-              onPress={this.fnPress.bind(this, 'unReceive')}
+              onPress={this.fnPress.bind(this, 'unSend')}
               >
               <Icon style={styles.icon} name="ios-car-outline" size={30} color="#959595" />
-              <Text style={styles.listCellText}>待收货</Text>
+              <Text style={styles.listCellText}>待发货</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.listCell}
-              onPress={this.fnPress.bind(this, 'backMoney')}
+              onPress={this.fnPress.bind(this, 'unReceive')}
               >
               <Icon style={styles.icon} name="ios-clipboard-outline" size={30} color="#959595" />
-              <Text style={styles.listCellText}>退货/售后</Text>
+              <Text style={styles.listCellText}>已发/待收货</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.listCell}
+              onPress={this.fnPress.bind(this, 'done')}
+              >
+              <Icon style={styles.icon} name="ios-clipboard-outline" size={30} color="#959595" />
+            <Text style={styles.listCellText}>已完成</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -113,6 +120,19 @@ export default class User extends React.Component {
             </View>
           </View>
         </TouchableOpacity>
+          <View style={[styles.last, styles.firstLast]}>
+            <TouchableOpacity
+              style={styles.arrowBtn}
+              >
+              <View style={styles.cellPart}>
+                <Icon style={styles.icon} name="ios-share-alt" size={22} color="#959595" />
+              <Text style={styles.addressInfo}>欢迎分享</Text>
+              </View>
+              <View style={styles.cellPart}>
+                  <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
+              </View>
+            </TouchableOpacity>
+          </View>
           <View style={styles.last}>
             <TouchableOpacity
               style={styles.arrowBtn}

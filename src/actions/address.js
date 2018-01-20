@@ -18,7 +18,7 @@ export const removeAddressFailed = createAction('address/REMOVE_ADDRESS_FAILED')
 // 更新用户收货信息
 export const updateAddressRequested = createAction('address/UPDATE_ADDRESS_REQUESTED')
 export const updateAddressSucceed = createAction('address/UPDATE_ADDRESS_SUCCEED')
-export const updateAddressDefaultFailed = createAction('address/UPDATE_ADDRESS_FAILED')
+export const updateAddressFailed = createAction('address/UPDATE_ADDRESS_FAILED')
 
 // 新增用户收货信息
 export const addAddressRequested = createAction('address/ADD_ADDRESS_REQUESTED')
@@ -30,3 +30,11 @@ export const hideAddAddressError = createAction('address/HIDE_ADD_ADDRESS_ERROR'
 export const setDefaultAddressRequested = createAction('address/SET_DEFAULT_ADDRESS_REQUESTED')
 export const setDefaultAddressSucceed = createAction('address/SET_DEFAULT_ADDRESS_SUCCEED')
 export const setDefaultAddressFailed = createAction('address/SET_DEFAULT_ADDRESS_FAILED')
+
+// 获取用户默认地址 REMOVE
+export const getOneAddressRequested = createAction('address/GET_ONE_ADDRESS_REQUESTED')
+export const getOneAddressSucceed = createAction('address/GET_ONE_ADDRESS_SUCCEED')
+export const getOneAddressFailed = createAction('address/GET_ONE_ADDRESS_FAILED')
+
+// setDefaultOneAddress
+export const setSelectedOneAddress = createAction('address/SET_SELECTED_ONE_ADDRESS')

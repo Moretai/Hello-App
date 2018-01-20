@@ -16,32 +16,6 @@ import { withNavigation, NavigationActions } from 'react-navigation'
 import * as actions from '../../actions/search'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-const mockData = [
-  {
-    text: '大白菜'
-  },
-  {
-    text: '大白菜'
-  },
-  {
-    text: '大白菜'
-  },
-  {
-    text: '大白菜'
-  },
-  {
-    text: '大白菜'
-  },
-  {
-    text: '牛肉'
-  },
-  {
-    text: '大白菜'
-  },
-  {
-    text: '大白菜'
-  }
-]
 @connect(
   state => ({
     hotSearch: state.get('search').get('hotSearch')
@@ -57,21 +31,20 @@ export default class Search extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      text: '',
-      history: []
+      text: ''
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.props.actions.getHotsearchRequested()
-    var data = await AsyncStorage.getItem('history')
-    data = JSON.parse(data)
-    console.warn('data 333333', data);
-    if (data.length) {
-      this.setState({
-        history: data
-      })
-    }
+    // var data = await AsyncStorage.getItem('history')
+    // data = JSON.parse(data)
+    // console.warn('data 333333', data);
+    // if (data.length) {
+    //   this.setState({
+    //     history: data
+    //   })
+    // }
   }
 
   _textChange = (text) => {
@@ -92,23 +65,23 @@ export default class Search extends React.Component {
       routeName: 'SearchList',
       params: {keywords: this.state.text}
     }))
-    var data = await AsyncStorage.getItem('history')
-    data = JSON.parse(data)
-    console.warn('data 11111--->', data);
-    if (data == null) data = []
-    data = data.filter(x => x !== '').concat(this.state.text)
-    console.warn('data 22222--->', data);
-    if(data.length) {
-      await AsyncStorage.setItem('history', JSON.stringify(data))
-    }
+    // var data = await AsyncStorage.getItem('history')
+    // data = JSON.parse(data)
+    // console.warn('data 11111--->', data);
+    // if (data == null) data = []
+    // data = data.filter(x => x !== '').concat(this.state.text)
+    // console.warn('data 22222--->', data);
+    // if(data.length) {
+    //   await AsyncStorage.setItem('history', JSON.stringify(data))
+    // }
   }
 
-  _deleteHistory = async() => {
-    await AsyncStorage.setItem('history', '')
-    this.setState({
-      history: []
-    })
-  }
+  // _deleteHistory = async() => {
+  //   await AsyncStorage.setItem('history', '')
+  //   this.setState({
+  //     history: []
+  //   })
+  // }
 
   _search = (text) => {
     const { navigation } = this.props
@@ -119,8 +92,6 @@ export default class Search extends React.Component {
   }
   render() {
     const { hotSearch } = this.props
-    const { history } = this.state
-    console.warn('history---->', history);
     const data = hotSearch.get('data')
     return (
       <View style={styles.wrap}>
@@ -137,7 +108,7 @@ export default class Search extends React.Component {
           />
         <Icon style={styles.icon} name="ios-search" size={22} color="#959595" />
         </View>
-        <View>
+        {/* <View>
           <View style={styles.title}>
             <Text style={styles.mainTitle}>历史搜索</Text>
           <Icon onPress={this._deleteHistory} name="ios-trash-outline" size={22} color="#929292" />
@@ -153,7 +124,7 @@ export default class Search extends React.Component {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </View> */}
         <View>
           <View style={styles.title}>
             <Text style={styles.mainTitle}>热门搜索</Text>
@@ -161,11 +132,11 @@ export default class Search extends React.Component {
           <View style={styles.listWrap}>
             {data && data.toJS().map((item, index) => (
               <TouchableOpacity
-                onPress={this._search.bind(this, item.text)}
+                onPress={this._search.bind(this, item.searchname)}
                 style={styles.cellWrap}
                 key={index}
                 >
-                <Text style={styles.cell}>{item.text}</Text>
+                <Text style={styles.cell}>{item.searchname}</Text>
               </TouchableOpacity>
             ))}
           </View>

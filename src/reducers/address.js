@@ -31,6 +31,21 @@ const initialState = Immutable.fromJS({
     loading: false,
     loaded: false,
     error: null,
+  },
+  one: {
+    data: null,
+    loading: false,
+    loaded: false,
+    error: null,
+  },
+  oneItem: {
+    city: '无锡市'
+  },
+  getDefault: {
+    data: null,
+    loading: false,
+    loaded: false,
+    error: null,
   }
 })
 
@@ -122,5 +137,38 @@ export default handleActions({
     .set('loaded', true)
     .set('success', false)
     .set('error', action.payload))
-  }
+  },
+  [actions.getOneAddressRequested](state) {
+    return state.update('one', v => v.set('loading', true))
+  },
+  [actions.getOneAddressSucceed](state, action) {
+    return state.update('one', v => v.set('loading', false)
+    .set('loaded', true)
+    .set('data', Immutable.fromJS(action.payload)))
+  },
+  [actions.getOneAddressFailed](state, action) {
+    return state.update('one', v => v.set('loading', false)
+    .set('loaded', true)
+    .set('error', action.payload))
+  },
+  [actions.setSelectedOneAddress](state, action) {
+    return state.set('oneItem', Immutable.fromJS(action.payload))
+  },
+  [actions.addressDefaultRequested](state) {
+    return state.update('getDefault', v => v.set('loading', true))
+  },
+  [actions.addressDefaultSucceed](state, action) {
+    return state.update('getDefault', v => v.set('loading', false)
+    .set('loaded', true)
+    .set('data', Immutable.fromJS(action.payload)))
+  },
+  [actions.addressDefaultFailed](state, action) {
+    return state.update('getDefault', v => v.set('loading', false)
+    .set('loaded', true)
+    .set('error', action.payload))
+  },
 }, initialState)
+
+// export const addressDefaultRequested = createAction('address/ADDRESS_DEFAULT_REQUESTED')
+// export const addressDefaultSucceed = createAction('address/ADDRESS_DEFAULT_SUCCEED')
+// export const addressDefaultFailed = createAction('address/ADDRESS_DEFAULT_FAILED')

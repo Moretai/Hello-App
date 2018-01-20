@@ -18,15 +18,16 @@ function* locationChange(action) {
   console.warn('routeName==>', routeName);
   if (routeName === 'ShoppingCar') {
     yield put(shopCarActions.shopCarRequested())
+    yield put(addressActions.addressDefaultRequested())
   }
 
   if (routeName === 'AddressList') {
     yield put(addressActions.addressAllRequested())
   }
 
-  if (routeName === 'Search') {
-    yield put(searchActions.getHotsearchRequested())
-  }
+  // if (routeName === 'Search') {
+  //   yield put(searchActions.getHotsearchRequested())
+  // }
 
 
 }

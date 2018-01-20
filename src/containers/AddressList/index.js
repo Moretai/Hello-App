@@ -18,6 +18,8 @@ import * as addressActions from '../../actions/address'
 
 const { height, width } = Dimensions.get('window')
 
+// TODO BUG 输入完成 表单未销毁
+
 @connect(
   state => ({
     addressList: state.get('address'),
@@ -32,27 +34,30 @@ const { height, width } = Dimensions.get('window')
 @withNavigation
 export default class AddressList extends React.Component {
   // TODO 新增和更新
-  static navigationOptions = ({ navigation }) => ({
-    title: '新增地址',
+  static navigationOptions = ({ navigation }) => {
+    console.warn('navigation---->', navigation);
+    return ({
     headerLeft: (
       <Button
         title="返回"
-        onPress={() => navigation.dispatch(NavigationActions.back())}
+        // onPress={() => navigation.dispatch(NavigationActions.navigate({routeName: 'User'}))}
+        onPress={() => navigation.dispatch(NavigationActions.navigate(
+          {routeName: `${navigation.state.params.from}`}
+        ))}
       />
     ),
   })
+}
 
   addNewAddress = () => {
     const { navigation } = this.props
-    navigation.dispatch(NavigationActions.navigate({
-      routeName: 'AddNewAddress',
-    }))
+    navigation.navigate('AddNewAddress', {name: '新增'})
   }
 
-  modifyAddress = () => {
+  modifyAddress(item) {
     const { navigation } = this.props
-    // this.props.actions.
-    navigation.navigate('AddNewAddress', {name: '修改'})
+    // this.props.actions.getOneAddressRequested({ id })
+    navigation.navigate('AddNewAddress', {name: '修改', item})
   }
 
   setDefaultAddress = (receiptinformationid) => {
@@ -91,7 +96,7 @@ export default class AddressList extends React.Component {
               // onPress={this.setDefaultAddress.bind(this, item.receiptinformationid)}
               onPress={this.setDefaultAddress.bind(this, item.receiptinformationid)}
               >
-              <Icon style={styles.icon} name={item.isdefault ? "ios-checkmark-circle-outline" : "ios-radio-button-off-outline"} size={22} color="#5dbb80" />
+              <Icon style={styles.icon} name={item.isdefault === '1' ? "ios-checkmark-circle-outline" : "ios-radio-button-off-outline"} size={22} color="#5dbb80" />
             </TouchableOpacity>
             <View style={styles.content}>
               <View>
@@ -102,7 +107,7 @@ export default class AddressList extends React.Component {
             </View>
           </View>
           <TouchableOpacity
-            onPress={this.modifyAddress}
+            onPress={this.modifyAddress.bind(this, item)}
             >
             <View style={styles.editWrap}>
               <Text style={styles.edit}>编辑</Text>

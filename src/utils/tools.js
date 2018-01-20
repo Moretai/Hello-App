@@ -32,3 +32,8 @@ export const  mergeArray = (A = [],B = []) => {
     return x
   })
 }
+
+export const stringCut = (str, num = 10) => {
+  if(!str) return '-----'
+  return `${str.slice(0, num)}...`
+}

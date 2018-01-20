@@ -6,7 +6,13 @@ const initialState = Immutable.fromJS({
   loading: false,
   loaded: false,
   error: null,
-  data: null
+  data: null,
+  validate: {
+    loading: false,
+    loaded: false,
+    error: null,
+    success: false,
+  }
 })
 
 export default handleActions({
@@ -23,5 +29,21 @@ export default handleActions({
     .set('loaded', true)
     .set('data', null)
     .set('error', action.payload)
+  },
+  [actions.validateTokenRequested](state) {
+    return state.update('validate', v => v.set('loading'. true))
+  },
+  [actions.validateTokenSucceed](state, action) {
+    return state.update('validate', v =>
+    v.set('loading'. false)
+    .set('loaded', true)
+    .set('success', true))
+  },
+  [actions.validateTokenFailed](state, action) {
+    return state.update('validate', v =>
+    v.set('loading'. false)
+    .set('loaded', true)
+    .set('success', false)
+    .set('error', action.payload))
   }
 }, initialState)

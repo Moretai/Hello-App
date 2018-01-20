@@ -1,6 +1,7 @@
-import { takeEvery, delay } from 'redux-saga'
-import { put , call, fork, takeLatest } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+import { put , call, fork, takeLatest, takeEvery } from 'redux-saga/effects'
 import { NavigationActions } from 'react-navigation'
+import { reset } from 'redux-form/immutable'
 import { Toast } from 'antd-mobile'
 import * as api from '../utils/api'
 import * as actions from '../actions/address'
@@ -19,11 +20,12 @@ function* addAddress(action) {
 function* addAddressSucceed() {
   yield call(Toast.success, '地址添加成功', 1)
   yield call(delay, 1000)
+  yield reset('addAddress')
   //TODO route change
   yield put(locationChange('AddressList'))
 }
 
-function* addAddressFailed() {
+function* addAddressFailed(action) {
   yield call(Toast.fail, '地址添加失败', 1)
 }
 
@@ -74,7 +76,53 @@ function* removeAddressSucceed() {
 }
 
 function* removeAddressFailed() {
-  yield call(Toast.success, '删除地址失败', 1)
+  yield call(Toast.fail, '删除地址失败', 1)
+}
+
+function* getOneAddress(action) {
+  try {
+    const result = yield call(api.getOneAddress, action.payload)
+    yield put(actions.getOneAddressSucceed(result))
+  } catch (e) {
+    yield put(actions.getOneAddressFailed(e.message))
+  }
+}
+
+function* getOneAddressSucceed() {
+
+}
+
+function* getOneAddressFailed() {
+
+}
+
+function* updateAddress(action) {
+  try {
+    const result = yield call(api.updateOneAddress, action.payload)
+    yield put(actions.updateAddressSucceed(result))
+  } catch (e) {
+    yield put(actions.updateAddressFailed(e.message))
+  }
+}
+
+function* updateAddressSucceed() {
+  yield call(Toast.success, '更新地址成功', 1)
+  yield reset('addAddress')
+  yield put(locationChange('AddressList'))
+}
+
+function* updateAddressFailed() {
+  yield call(Toast.fail, '删除地址失败', 1)
+}
+
+function* addressDefault(action) {
+  console.warn('addressDefault----->---->');
+  try {
+    const result = yield call(api.getDefaultAddress, action.payload)
+    yield put(actions.addressDefaultSucceed(result))
+  } catch (e) {
+    yield put(actions.addressDefaultFailed(e.message))
+  }
 }
 
 export default function* addressSaga() {
@@ -89,4 +137,17 @@ export default function* addressSaga() {
   yield fork(takeEvery, String(actions.removeAddressRequested), removeAddress)
   yield fork(takeEvery, String(actions.removeAddressSucceed), removeAddressSucceed)
   yield fork(takeEvery, String(actions.removeAddressFailed), removeAddressFailed)
+  yield fork(takeEvery, String(actions.getOneAddressRequested), getOneAddress)
+  yield fork(takeEvery, String(actions.getOneAddressSucceed), getOneAddressSucceed)
+  yield fork(takeEvery, String(actions.getOneAddressFailed), getOneAddressFailed)
+  yield fork(takeEvery, String(actions.updateAddressRequested), updateAddress)
+  yield fork(takeEvery, String(actions.updateAddressSucceed), updateAddressSucceed)
+  yield fork(takeEvery, String(actions.updateAddressFailed), updateAddressFailed)
+  yield fork(takeEvery, String(actions.addressDefaultRequested), addressDefault)
+  // yield fork(takeEvery, String(actions.addressDefaultSucceed), addressDefaultSucceed)
+  // yield fork(takeEvery, String(actions.addressDefaultFailed), addressDefaultFailed)
 }
+
+// export const addressDefaultRequested = createAction('address/ADDRESS_DEFAULT_REQUESTED')
+// export const addressDefaultSucceed = createAction('address/ADDRESS_DEFAULT_SUCCEED')
+// export const addressDefaultFailed = createAction('address/ADDRESS_DEFAULT_FAILED')

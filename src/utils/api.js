@@ -4,10 +4,12 @@
 import { SECRET } from './config'
 import { getLocalToken } from './tools'
 // const getLocalToken = (key) => AsyncStorage.getItem(key)
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest
 
 export const fetchJxy = async(method = 'GET', endPoint = '/hello', params = {}, customeHeaders = {}) => {
   // let url = 'http://localhost:8888/api' + endPoint
-  let url = 'http://120.78.166.233:8080/api' + endPoint
+  // let url = 'http://120.78.166.233:8080/api' + endPoint
+  let url = 'http://192.168.0.110:8080/api' + endPoint
   // let url = 'http://192.168.102.36:8888/api' + endPoint
   // const token = getLocalToken || null
   const token = await getLocalToken('token') || null
@@ -55,7 +57,7 @@ export const fetchJxy = async(method = 'GET', endPoint = '/hello', params = {}, 
 }
 
 export const fetchBase = (method = 'GET', endPoint = '/hello', params = {}, customeHeaders = {}) => {
-  let url = 'http://192.168.0.107:8888/api' + endPoint
+  let url = 'http://192.168.0.108:8888/api' + endPoint
   // let url = 'http://192.168.0.102:8081/' + endPoint
   // let url = 'http://192.168.102.36:8888/api' + endPoint
   // const token = cookie.load('dae_crm_t') ? `Bearer ${cookie.load('dae_crm_t')}` : null
@@ -101,7 +103,12 @@ export const fetchBase = (method = 'GET', endPoint = '/hello', params = {}, cust
   })
 }
 
+
+
 export const fetchCategory = (params) => fetchJxy('GET', '/selectappgoodsclassificationarr')
+
+// 验证token暂不需要 TODO
+export const validateToken = (params) => fetchJxy('GET', '/isTokenValid')
 
 export const fetchList = (params) => fetchJxy('GET', `/selectappgoodslistbygoodsclassificationid/${params.typeId}`, params)
 
@@ -113,29 +120,56 @@ export const fetchCarousel = (params) => fetchJxy('GET','/selectappcarouselarr')
 export const sendMsg = (params) => fetchJxy('GET', `/sendmsg/${params.phone}`)
 
 // 模糊查询接口
-export const search = (params) => fetchBase('GET',`/selectgoodsinfovague`, params)
+export const search = (params) => fetchJxy('GET',`/selectgoodsinfovague`, params)
 
 // 获取热门搜索关键词
-export const getHotSearch = (params) => fetchBase('GET', '/hotsearchwords')
+export const getHotSearch = (params) => fetchJxy('GET', '/hotsearchwords')
+
+//
 
 export const login = (params) => fetchJxy('POST',`/loginbyphone`, params)
 
-export const addGoodsToCar = (params) => fetchBase('POST',`/insertshoppingcat`, params)
+// 加入购物车
+export const addGoodsToCar = (params) => fetchJxy('POST',`/insertshoppingcat`, params)
+
+// 大量数量加入购物车
+export const addLotsGoodsToCar = (params) => fetchJxy('PUT',`/updateshoppingcatnum`, params)
 
 // 查询用户购物车列表
-export const fetchShopCarAll = (params) => fetchBase('GET', '/selectshoppingcatall')
+export const fetchShopCarAll = (params) => fetchJxy('GET', '/selectshoppingcatall')
 
 // 去结算生产订单
 export const generateOrder = (params) => fetchBase('POST', '/insertorder', params)
 
 // 新增用户收货信息
-export const addAddress = (params) => fetchBase('POST', '/insertreceiptinformation', params)
+export const addAddress = (params) => fetchJxy('POST', '/insertreceiptinformation', params)
 
 // 获取用户收货信息列表
-export const fetchAllAddress = (params) => fetchBase('GET','/selectreceiptinformationlist')
+export const fetchAllAddress = (params) => fetchJxy('GET','/selectreceiptinformationlist')
 
 // 更新用户默认地址
-export const setDefaultAddress = (params) => fetchBase('PUT','/updatadefaultreceiptinformation', params)
+export const setDefaultAddress = (params) => fetchJxy('PUT','/updatedefaultreceiptinformation', params)
 
 //删除用户收货信息 TODO DELETE ?
-export const removeAddress = (params) => fetchBase('DELETE',`/deleteuserreceiptinformation/${params.id}`)
+export const removeAddress = (params) => fetchJxy('DELETE',`/deleteuserreceiptinformation/${params.id}`)
+
+// 获取一个地址
+export const getOneAddress = (params) => fetchJxy('GET',`/selectReceiptinformation/${params.id}`)
+
+// 更新一条地址
+export const updateOneAddress = (params) => fetchJxy('PUT','/updateuserreceiptinformation', params)
+
+// 获取用户默认地址
+export const getDefaultAddress = (params) => fetchJxy('GET','/selectdefaultreceiptinformation')
+
+// 更改商品选中状态
+export const toggleOneGoodSelected = (params) => fetchJxy('PUT', '/updateshoppingcat', params)
+
+// 以物品id删除购物车的商品
+export const deleteGoodByIdOrAll = (params) => fetchJxy('DELETE', `/deleteshoppingcatbygoodsid/${params.id}`)
+
+// 获取费用 selectfeeinfo
+export const fetchFeeInfo = () => fetchJxy('GET', '/selectfeeinfo')
+
+// 获取费用简介
+export const fetchFeeIntro = () => fetchJxy('GET', '/selectchargeitemapp')

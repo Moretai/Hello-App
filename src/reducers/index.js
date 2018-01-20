@@ -8,8 +8,10 @@ import list from './list'
 import shopcar from './shopcar'
 import vcode from './vcode'
 import search from './search'
+import searchlist from './searchlist'
 import login from './login'
 import address from './address'
+import info from './info'
 import Immutable from 'immutable'
 var installDevTools = require("immutable-devtools")
 installDevTools(Immutable)
@@ -22,7 +24,9 @@ export default combineReducers({
   shopcar,
   vcode,
   search,
+  searchlist,
   login,
   address,
+  info,
   form: formReducer
 })

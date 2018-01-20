@@ -90,6 +90,10 @@ export default class Login extends React.Component {
     this.props.actions.sendMsgRequested({phone: phoneNum})
   }
 
+  componentDidMount() {
+    // this.props.actions.validateTokenRequested()
+  }
+
   render() {
     const { handleSubmit, submitting, pristine, vcode, invalid, phoneNum } = this.props
     const vcodeLoading = vcode.get('loading')

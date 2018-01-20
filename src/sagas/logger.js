@@ -1,5 +1,4 @@
-import { takeEvery } from 'redux-saga'
-import { select } from 'redux-saga/effects'
+import { select, takeEvery } from 'redux-saga/effects'
 
 function* logger(action) {
   const newState = yield select()
@@ -8,5 +7,5 @@ function* logger(action) {
 }
 
 export default function* loggerSaga() {
-  yield* takeEvery('*', logger)
+  yield takeEvery('*', logger)
 }

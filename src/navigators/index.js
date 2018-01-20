@@ -181,10 +181,10 @@ const Tabs = TabNavigator(
       screen: HomeStack,
       path: '/home',
       navigationOptions: {
-        tabBarLabel: 'Home',
+        tabBarLabel: '主页',
         tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
           <Ionicons
-            name={focused ? 'ios-stats' : 'ios-stats-outline'}
+            name={focused ? 'ios-home' : 'ios-home-outline'}
             size={22}
             style={{ color: tintColor }}
           />
@@ -193,12 +193,12 @@ const Tabs = TabNavigator(
     },
     Search: {
       screen: SearchStack,
-      path: '/Search',
+      path: '/search',
       navigationOptions: {
-        tabBarLabel: 'Search',
+        tabBarLabel: '搜索',
         tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
           <Ionicons
-            name={focused ? 'ios-folder-open' : 'ios-folder-open-outline'}
+            name={focused ? 'ios-search' : 'ios-search-outline'}
             size={22}
             style={{ color: tintColor }}
           />
@@ -209,10 +209,10 @@ const Tabs = TabNavigator(
       screen: ShoppingCarStack,
       path: '/ShoppingCar',
       navigationOptions: {
-        tabBarLabel: 'Shop',
+        tabBarLabel: '购物车',
         tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
           <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            name={focused ? 'ios-cart' : 'ios-cart-outline'}
             size={22}
             style={{ color: tintColor }}
           />
@@ -226,7 +226,7 @@ const Tabs = TabNavigator(
         tabBarLabel: 'Shop',
         tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
           <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            name={focused ? 'ios-people' : 'ios-people-outline'}
             size={22}
             style={{ color: tintColor }}
           />
@@ -252,7 +252,7 @@ const Tabs = TabNavigator(
     tabBarPosition: 'bottom',
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: 'Search',
+    initialRouteName: 'User',
     tabBarOptions: {
       inactiveBackgroundColor: '#fff',
       activeBackgroundColor: '#fff',

@@ -18,7 +18,7 @@ import { withNavigation } from 'react-navigation'
 import Immutable from 'immutable'
 import Icon from 'react-native-vector-icons/Ionicons'
 import * as listActions from '../../actions/list'
-import * as shopCarActions from '../../actions/shopcar'
+import * as searchListshopCarActions from '../../actions/searchlist'
 import { mergeArray } from '../../utils/tools'
 
 const mockData = Immutable.fromJS([
@@ -71,7 +71,7 @@ const mockDataA = [
   undefined,
   dispatch => ({
     actions: bindActionCreators({
-      ...shopCarActions
+      ...searchListshopCarActions
     }, dispatch)
   })
 )
@@ -80,7 +80,7 @@ class RightItem extends React.Component {
 
   _addGoods = () => {
     const { item } = this.props
-    this.props.actions.addGoodsToshopCarRequested({ goodsid: item.id, goodsnum: 1 })
+    this.props.actions.searchAddGoodsToshopCarRequested({ goodsid: item.id, goodsnum: 1 })
   }
 
   // _minusGoods = () => {
@@ -106,7 +106,7 @@ class RightItem extends React.Component {
           <TouchableOpacity onPress={this._navToDetail}>
             <Image
               source={{ uri: item.imgpath }}
-              style={{ width: 60, height: 60 }}
+              style={{ width: 90, height: 90 }}
             />
           </TouchableOpacity>
         </View>
@@ -114,17 +114,37 @@ class RightItem extends React.Component {
           <TouchableOpacity onPress={this._navToDetail}>
             <Text style={styles.rightItemTitle}>{item.goodsname}</Text>
             <Text style={styles.rightItemDesc}>{item.introduce}</Text>
+            <Text style={styles.rightItemDesc}>库存: {item.stock || '充足'}</Text>
           </TouchableOpacity>
-          <Text style={styles.rightItemPrice}>
-            <Text style={styles.currency}>¥</Text>
-            <Text style={styles.number}>{item.unitprice}</Text>
-            <Text style={styles.currency}>{`/${item.company}`}</Text>
-          </Text>
+          {
+            item.favorableprice ?
+            <View style={styles.hasTwoPrice}>
+              <Text style={styles.rightItemPrice}>
+                <Text style={styles.currency}>¥</Text>
+                <Text style={styles.number}>{item.favorableprice}</Text>
+                <Text style={styles.currency}>{`/${item.company}`}</Text>
+              </Text>
+              <Text style={[styles.rightItemPrice, styles.priceDelete]}>
+                <Text style={styles.currency}>¥</Text>
+                <Text style={[styles.number, styles.priceDeleteSmall]}>{item.unitprice}</Text>
+                <Text style={styles.currency}>{`/${item.company}`}</Text>
+              </Text>
+            </View>
+            :
+            <View style={styles.hasTwoPrice}>
+              <Text style={[styles.rightItemPrice]}>
+                <Text style={styles.currency}>¥</Text>
+                <Text style={[styles.number]}>{item.unitprice}</Text>
+                <Text style={styles.currency}>{`/${item.company}`}</Text>
+              </Text>
+            </View>
+          }
+
         </View>
         <View style={styles.operatorArea}>
           {/* <Icon onPress={this._minusGoods} name="ios-remove-circle-outline" size={22} color="#4F8EF7" /> */}
           {/* <Text style={styles.addNumber}>0</Text> */}
-          <Icon onPress={this._addGoods} name="ios-cart-outline" size={22} color="#4F8EF7" />
+          <Icon onPress={this._addGoods} name="ios-cart-outline" size={30} color="#4F8EF7" />
         </View>
       </View>
     )
@@ -313,6 +333,10 @@ const styles = StyleSheet.create({
   rightItemRight: {
     paddingLeft: 10,
   },
+  hasTwoPrice: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
 
   rightItemTitle: {
     fontSize: 14,
@@ -335,9 +359,22 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end'
   },
 
+  priceDelete: {
+    color: '#9a9a9a',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 14
+  },
+
   number: {
     fontSize: 22,
     marginLeft: 100,
+  },
+
+  priceDeleteSmall: {
+    fontSize: 12,
+    paddingTop: 10,
+    paddingBottom: 10
   },
 
   operatorArea: {

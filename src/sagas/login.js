@@ -28,9 +28,20 @@ function* loginSucceed(action) {
   console.warn('result ---->', action);
   const { token, tokenvalidtime, freshtoken, freshtokenvalidtime } = action.payload
   yield setLocalToken('token', token)
+  yield put({type: "Navigation/NAVIGATE", routeName: "Home"})
+}
+
+function* validateToken() {
+  try {
+    yield call(api.validateToken)
+    yield put(actions.validateTokenSucceed())
+  } catch (e) {
+    yield put(actions.validateTokenFailed(e.message))
+  }
 }
 
 export default function* loginSaga() {
   yield takeEvery(String(actions.loginRequested), login)
   yield takeEvery(String(actions.loginSucceed), loginSucceed)
+  yield takeEvery(String(actions.validateTokenRequested), validateToken)
 }

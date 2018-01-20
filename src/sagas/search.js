@@ -1,4 +1,3 @@
-import { eventChannel, END, delay } from 'redux-saga'
 import { call, put, fork, take, takeEvery } from 'redux-saga/effects'
 import { Action } from 'redux-actions'
 import * as api from '../utils/api'

@@ -10,6 +10,8 @@ import sagas from './src/sagas'
 EStyleSheet.build({})
 const store = configure()
 store.runSaga(sagas)
+console.disableYellowBox = true
+console.ignoredYellowBox = ['Remote debugger']
 
 @connect(
   undefined,

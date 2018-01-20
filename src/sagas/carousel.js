@@ -1,5 +1,5 @@
-import { takeEvery, delay } from 'redux-saga'
-import { put , call, fork, takeLatest } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+import { put , call, fork, takeLatest, takeEvery } from 'redux-saga/effects'
 import { NavigationActions } from 'react-navigation'
 import * as api from '../utils/api'
 import * as actions from '../actions/carousel'

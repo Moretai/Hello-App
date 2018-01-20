@@ -22,10 +22,12 @@ const mapTypeOrder = (type) => {
       return '全部'
     case 'unPay':
       return '待付款'
+    case 'unSend':
+      return '待发货'
     case 'unReceive':
-      return '待收货'
-    case 'backMoney':
-      return '退货/售后'
+      return '已发/待收货'
+    case 'done':
+      return '已完成'
     default:
       return '全部'
   }
@@ -38,7 +40,7 @@ export default class OrderList extends React.Component {
       title: `${mapTypeOrder(navigation.state.params.type)}订单`,
       headerLeft: (
       <Button
-        title="Cancel"
+        title="返回"
         onPress={() => navigation.dispatch(NavigationActions.back())}
       />
     )
@@ -68,7 +70,7 @@ export default class OrderList extends React.Component {
               source={require('../../resources/images/avatar.jpg')}
               style={{width: 60, height: 60, borderRadius: 30}}
              />}
-            // horizontal={true}
+            horizontal={true}
             showsHorizontalScrollIndicator={false}
           />
         <View style={styles.row}>
