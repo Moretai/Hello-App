@@ -4,7 +4,7 @@
 import { SECRET } from './config'
 import { getLocalToken } from './tools'
 // const getLocalToken = (key) => AsyncStorage.getItem(key)
-GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest
+// GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest
 
 export const fetchJxy = async(method = 'GET', endPoint = '/hello', params = {}, customeHeaders = {}) => {
   // let url = 'http://localhost:8888/api' + endPoint

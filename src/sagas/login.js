@@ -26,7 +26,7 @@ function* login(action) {
 
 function* loginSucceed(action) {
   console.warn('result ---->', action);
-  const { token, tokenvalidtime, freshtoken, freshtokenvalidtime } = action.payload
+  const token = action.payload
   yield setLocalToken('token', token)
   yield put({type: "Navigation/NAVIGATE", routeName: "Home"})
 }
