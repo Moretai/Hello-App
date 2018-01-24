@@ -45,5 +45,8 @@ export default handleActions({
     .set('loaded', true)
     .set('success', false)
     .set('error', action.payload))
+  },
+  [actions.logOut](state, action) {
+    return state.set('data', null)
   }
 }, initialState)

@@ -1,4 +1,6 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import {
   View,
   Text,
@@ -10,11 +12,22 @@ import {
   ScrollView,
  } from 'react-native'
  import Icon from 'react-native-vector-icons/Ionicons'
+ import * as actions from '../../actions/login'
 import { withNavigation, NavigationActions} from 'react-navigation'
 
 const { height, width } = Dimensions.get('window')
 
 // @withNavigation
+@connect(
+  state => ({
+    login: state.get('login').get('data')
+  }),
+  dispatch => ({
+    actions: bindActionCreators({
+      ...actions
+    }, dispatch)
+  })
+)
 export default class User extends React.PureComponent {
   fnPress = (type) => {
     const { navigation } = this.props
@@ -28,7 +41,13 @@ export default class User extends React.PureComponent {
     const { navigation } = this.props
     navigation.navigate('AddressList',{from: 'User'})
   }
+
+  logOut = () => {
+    this.props.actions.logOut()
+  }
   render() {
+    const name = this.props.login && this.props.login.get('name')
+    console.warn('name====>', name);
     return (
       <ScrollView style={styles.wrap}>
         <View style={styles.topWrap}>
@@ -42,7 +61,13 @@ export default class User extends React.PureComponent {
               source={require('../../resources/images/avatar.jpg')}
               style={styles.avatar}
             />
-            <Text style={styles.nickname}>More</Text>
+            <Text style={styles.nickname}>{name || '您还未登录'}</Text>
+            <TouchableOpacity
+              onPress={this.logOut}
+              style={styles.touchCell}
+            >
+              <Text style={styles.checkAllOrder}>退出</Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.block}>

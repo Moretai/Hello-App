@@ -18,8 +18,23 @@ function* searchAddGoodsToshopCarSucceed() {
   yield fork(Toast.success, '加入购物车成功', 0.4)
 }
 
-function* searchAddGoodsToshopCarFailed() {
-  yield fork(Toast.fail, '加入购物车失败', 0.4)
+// INVALID_TOKEN 无效token
+// REFRESH_PAGE 商品信息失效
+// NOT_ENOUGH 库存不足
+function* searchAddGoodsToshopCarFailed(action) {
+  const errorMessage = action.payload
+  if (errorMessage === 'INVALID_TOKEN') {
+    yield fork(Toast.fail, '您还未登录~', 0.4)
+    yield put({type: "Navigation/NAVIGATE", routeName: "Login"})
+  }
+
+  if (errorMessage === 'REFRESH_PAGE') {
+    yield fork(Toast.fail, '商品信息已失效', 0.4)
+  }
+
+  if (errorMessage === 'NOT_ENOUGH') {
+    yield fork(Toast.fail, '此商品库存不足', 0.4)
+  }
 }
 
 

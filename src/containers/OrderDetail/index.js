@@ -1,4 +1,6 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import {
   View,
   Text,
@@ -14,10 +16,21 @@ import {
   Image,
  } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
+import * as actions from '../../actions/order'
 import { withNavigation, NavigationActions } from 'react-navigation'
 
 const { height, width } = Dimensions.get('window')
 
+@connect(
+  state => ({
+    // list: state.get('order').get('list')
+  }),
+  dispatch => ({
+    actions: bindActionCreators({
+      ...actions,
+    }, dispatch)
+  })
+)
 export default class OrderDetail extends React.PureComponent {
   static navigationOptions = ({navigation}) => ({
       // title: `${navigation.state.params.name}收货地址`,
@@ -40,6 +53,10 @@ export default class OrderDetail extends React.PureComponent {
     this.setState(preState => ({
       show: !preState.show
     }))
+  }
+
+  componentDidMount() {
+    this.props.actions.getOneOrderRequested({ id: '24'})
   }
 
   render() {

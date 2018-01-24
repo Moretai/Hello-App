@@ -20,6 +20,7 @@ import {
  import * as shopCarActions from '../../actions/shopcar'
  import * as addressActions from '../../actions/address'
  import * as infoActions from '../../actions/info'
+ import * as orderActions from '../../actions/order'
  import Icon from 'react-native-vector-icons/Ionicons'
  import { withNavigation } from 'react-navigation'
  import Swipeout from 'react-native-swipeout'
@@ -36,7 +37,8 @@ const { height, width } = Dimensions.get('window')
     actions: bindActionCreators({
       ...shopCarActions,
       ...addressActions,
-      ...infoActions
+      ...infoActions,
+      ...orderActions
     }, dispatch)
   })
 )
@@ -226,6 +228,10 @@ export default class ShoppingCar extends React.PureComponent {
     })
   }
 
+  generateOrder = () => {
+    this.props.actions.generateOrderRequested()
+  }
+
   render() {
     console.log('scrollEnabled...', this.state.scrollEnabled)
     console.log('flag...', this.state.flag)
@@ -322,6 +328,7 @@ export default class ShoppingCar extends React.PureComponent {
         </View>
         <TouchableOpacity
           style={styles.rightBar}
+          onPress={this.generateOrder}
           >
         <Text style={styles.goPay}>去支付</Text>
         <Icon style={styles.icon} name="ios-play" size={22} color="#fff" />

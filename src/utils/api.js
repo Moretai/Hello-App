@@ -8,12 +8,9 @@ import { getLocalToken } from './tools'
 
 export const fetchJxy = async(method = 'GET', endPoint = '/hello', params = {}, customeHeaders = {}) => {
   // let url = 'http://localhost:8888/api' + endPoint
-  let url = 'http://120.78.166.233:8080/api' + endPoint
-  // let url = 'http://192.168.0.110:8080/api' + endPoint
-  // let url = 'http://192.168.102.36:8888/api' + endPoint
-  // const token = getLocalToken || null
+  // let url = 'http://120.78.166.233:8080/api' + endPoint
+  let url = 'http://192.168.0.107:8080/api' + endPoint
   const token = await getLocalToken('token') || null
-  // const token = cookie.load('dae_crm_t') ? `Bearer ${cookie.load('dae_crm_t')}` : null
   console.warn('token is ==>', token);
   const headers = Object.assign({
     Accept: 'application/json',
@@ -173,3 +170,12 @@ export const fetchFeeInfo = () => fetchJxy('GET', '/selectfeeinfo')
 
 // 获取费用简介
 export const fetchFeeIntro = () => fetchJxy('GET', '/selectchargeitemapp')
+
+// 获取订单列表
+export const fetchListOrders = (params) => fetchJxy('GET', '/selectorderlist', params)
+
+// 生成一个订单
+export const generateOneOrder = (params) => fetchJxy('POST', '/insertorder', params)
+
+// 获取订单详情
+export const fetchOneOrderDetail = (params) => fetchJxy('GET', `/selectorderdetailbyorderid/${params.id}`)

@@ -10,6 +10,7 @@ import searchlist from './searchlist'
 import login from './login'
 import info from './info'
 import address from './address'
+import order from './order'
 import logger from './logger'
 
 let sagas = [
@@ -24,6 +25,7 @@ let sagas = [
   fork(login),
   fork(info),
   fork(address),
+  fork(order),
   fork(logger)
 ]
 

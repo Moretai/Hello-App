@@ -85,7 +85,7 @@ export default class Login extends React.PureComponent {
   }
 
   sendSms = () => {
-    Toast.info('send sms ing....', 1)
+    Toast.info('短信发送中,客官稍等~', 1)
     const { phoneNum } = this.props
     this.props.actions.sendMsgRequested({phone: phoneNum})
   }

@@ -7,3 +7,5 @@ export const loginFailed = createAction('login/LOGIN_FAILED')
 export const validateTokenRequested = createAction('auth/VALIDATE_TOKEN_REQUESTED')
 export const validateTokenSucceed = createAction('auth/VALIDDATE_TOKEN_SUCCEED')
 export const validateTokenFailed = createAction('auth/VALIDDATE_TOKEN_FAILED')
+
+export const logOut = createAction('auth/LOG_OUT')

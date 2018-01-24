@@ -1,4 +1,6 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import {
   View,
   Text,
@@ -12,6 +14,7 @@ import {
   Button
  } from 'react-native'
 import { withNavigation, NavigationActions } from 'react-navigation'
+import * as actions from '../../actions/order'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 const { height, width } = Dimensions.get('window')
@@ -32,8 +35,25 @@ const mapTypeOrder = (type) => {
       return '全部'
   }
 }
+/**
+ * 1 未付款
+ * 2 已付款待发货
+ * 3 已发货
+ * 4 已完成
+ * 5 已退款
+ * 6 已取消
+ **/
 
-
+@connect(
+  state => ({
+    list: state.get('order').get('list')
+  }),
+  dispatch => ({
+    actions: bindActionCreators({
+      ...actions,
+    }, dispatch)
+  })
+)
 @withNavigation
 export default class OrderList extends React.PureComponent {
   static navigationOptions = ({navigation}) => ({
@@ -46,14 +66,23 @@ export default class OrderList extends React.PureComponent {
     )
     })
 
-  _viewDetail = () => {
+  _viewDetail = (id) => {
     const { navigation } = this.props
-    navigation.navigate('OrderDetail')
+    navigation.navigate('OrderDetail',{ id })
   }
 
   _keyExtractor = (item, index) => item.id
 
+  componentDidMount() {
+    this.props.actions.fetchListOrdersRequested({ type: '1', page: 1, limit: 10 })
+  }
+
+  componentWillUnmount() {
+    console.warn('componentWillUnmount----->');
+  }
+
   render() {
+    const { list } = this.props
     return (
       <View style={styles.wrap}>
         <View style={styles.cell}>

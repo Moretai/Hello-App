@@ -7,6 +7,7 @@ import carousel from './carousel'
 import list from './list'
 import shopcar from './shopcar'
 import vcode from './vcode'
+import order from './order'
 import search from './search'
 import searchlist from './searchlist'
 import login from './login'
@@ -27,6 +28,7 @@ export default combineReducers({
   searchlist,
   login,
   address,
+  order,
   info,
   form: formReducer
 })
