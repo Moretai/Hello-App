@@ -18,7 +18,7 @@ import { withNavigation, NavigationActions } from 'react-navigation'
 
 const { height, width } = Dimensions.get('window')
 
-export default class OrderDetail extends React.Component {
+export default class OrderDetail extends React.PureComponent {
   static navigationOptions = ({navigation}) => ({
       // title: `${navigation.state.params.name}收货地址`,
       title: '订单详情',

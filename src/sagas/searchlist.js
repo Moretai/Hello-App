@@ -15,11 +15,11 @@ function* searchAddGoodsToshopCar(action) {
 }
 
 function* searchAddGoodsToshopCarSucceed() {
-  yield call(Toast.success, '加入购物车成功', 1)
+  yield fork(Toast.success, '加入购物车成功', 0.4)
 }
 
 function* searchAddGoodsToshopCarFailed() {
-  yield call(Toast.fail, '加入购物车失败', 1)
+  yield fork(Toast.fail, '加入购物车失败', 0.4)
 }
 
 

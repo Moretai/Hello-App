@@ -15,7 +15,7 @@ import { withNavigation, NavigationActions} from 'react-navigation'
 const { height, width } = Dimensions.get('window')
 
 // @withNavigation
-export default class User extends React.Component {
+export default class User extends React.PureComponent {
   fnPress = (type) => {
     const { navigation } = this.props
     navigation.dispatch(NavigationActions.navigate({

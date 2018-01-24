@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as actions from '../../actions/search'
+import * as searchListActions from '../../actions/searchlist'
 import * as shopCarActions from '../../actions/shopcar'
 import {
   View,
@@ -13,6 +14,7 @@ import {
   Image
 } from 'react-native'
 import { withNavigation, NavigationActions } from 'react-navigation'
+import NoData from '../../components/NoData'
 import Icon from 'react-native-vector-icons/Ionicons'
 //TODO BUG 搜索加入购物车后 不能返回
 @connect(
@@ -22,11 +24,12 @@ import Icon from 'react-native-vector-icons/Ionicons'
   dispatch => ({
     actions: bindActionCreators({
       ...actions,
-      ...shopCarActions
+      ...shopCarActions,
+      ...searchListActions
     }, dispatch)
   })
 )
-export default class SearchScreen extends React.Component {
+export default class SearchScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => ({
     title: `搜索${navigation.state.params.keywords}的结果`,
     headerLeft: (
@@ -44,7 +47,7 @@ export default class SearchScreen extends React.Component {
   }
 
   _addGoods = (id) => {
-    this.props.actions.addGoodsToshopCarRequested({ goodsid: id, goodsnum: 1 })
+    this.props.actions.searchAddGoodsToshopCarRequested({ goodsid: id, goodsnum: 1 })
   }
   render() {
     const { params } = this.props.navigation.state
@@ -56,8 +59,9 @@ export default class SearchScreen extends React.Component {
     console.warn('dataJs----->', dataJs);
     return (
       <ScrollView>
-        {dataJs && dataJs.map((item, index) => (
-          <View style={styles.rightItemWrap} key={`${item.id}-{index}`}>
+        {dataJs && dataJs.length === 0 && <NoData />}
+        {dataJs && dataJs.length > 0 && dataJs.map((item, index) => (
+          <View style={styles.rightItemWrap} key={item.id}>
             <View style={styles.rightItemLeft}>
               <TouchableOpacity onPress={this._navToDetail}>
                 <Image

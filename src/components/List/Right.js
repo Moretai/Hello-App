@@ -12,60 +12,15 @@ import {
   Image,
   RefreshControl,
   AlertIOS,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import Immutable from 'immutable'
 import Icon from 'react-native-vector-icons/Ionicons'
 import * as listActions from '../../actions/list'
 import * as searchListshopCarActions from '../../actions/searchlist'
-import { mergeArray } from '../../utils/tools'
 
-const mockData = Immutable.fromJS([
-  {
-    "id":"8",
-    "goodsname":"苹果",
-    "introduce":"1",
-    "unitprice":"1",
-    "favorableprice":"",
-    "company":"元/斤",
-    "imgpath":"http://oniwvmkkh.bkt.clouddn.com/吉祥语.png",
-    "stock":"1"
-  },
-  {
-    "id":"9",
-    "goodsname":"苹果",
-    "introduce":"1",
-    "unitprice":"1",
-    "favorableprice":"",
-    "company":"元/斤",
-    "imgpath":"http://oniwvmkkh.bkt.clouddn.com/吉祥语.png",
-    "stock":"1"
-  }
-])
-
-const mockDataA = [
-  {
-    "id":"8",
-    "goodsname":"苹果",
-    "introduce":"1",
-    "unitprice":"1",
-    "favorableprice":"",
-    "company":"元/斤",
-    "imgpath":"http://oniwvmkkh.bkt.clouddn.com/吉祥语.png",
-    "stock":"1"
-  },
-  {
-    "id":"9",
-    "goodsname":"苹果",
-    "introduce":"1",
-    "unitprice":"1",
-    "favorableprice":"",
-    "company":"元/斤",
-    "imgpath":"http://oniwvmkkh.bkt.clouddn.com/吉祥语.png",
-    "stock":"1"
-  }
-]
 // WARNING:flatList 不支持Iummutable js
 @connect(
   undefined,
@@ -76,7 +31,7 @@ const mockDataA = [
   })
 )
 @withNavigation
-class RightItem extends React.Component {
+class RightItem extends React.PureComponent {
 
   _addGoods = () => {
     const { item } = this.props
@@ -141,11 +96,14 @@ class RightItem extends React.Component {
           }
 
         </View>
-        <View style={styles.operatorArea}>
-          {/* <Icon onPress={this._minusGoods} name="ios-remove-circle-outline" size={22} color="#4F8EF7" /> */}
-          {/* <Text style={styles.addNumber}>0</Text> */}
-          <Icon onPress={this._addGoods} name="ios-cart-outline" size={30} color="#4F8EF7" />
-        </View>
+        <TouchableOpacity
+          onPress={this._addGoods}
+          style={styles.operatorArea}
+          >
+          <View>
+            <Icon name="ios-cart-outline" size={30} color="#5dbb80" />
+          </View>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -182,61 +140,78 @@ export default class Right extends React.PureComponent {
     <RightItem item={item} />
   )}
 
-  // hasMore = () => {
-  //   const { list, shopcarList } = this.props
-  //   const total = list.get('data').get('count')
-  //   const data = list.get('data').get('data')
-  //   const length = data && data.size
-  //   // console.warn('length', length)
-  //   // console.warn('total', total)
-  //   return length < Number(total)
-  // }
+  hasMore = () => {
+    const { list, shopcarList } = this.props
+    const total = list.get('data').get('count')
+    const data = list.get('data').get('data')
+    const length = data && data.size
+    // console.warn('length', length)
+    // console.warn('total', total)
+    return length < Number(total)
+  }
 
-  // _endReach = ({ distanceFromEnd }) => {
-  //   if( distanceFromEnd > 50 || distanceFromEnd < 0) {
-  //     return
-  //   }
-  //   const { list, shopcarList } = this.props
-  //   const page = list.get('data') && list.get('data').get('page')
-  //   const typeId = '111'
-  //   const loadMoreLoading = list.get('loadMoreloading')
-  //
-  //   if (loadMoreLoading || !this.hasMore()) {
-  //     return
-  //   }
-  //
-  //   this.props.actions.loadMoreListRequested({ typeId: '111' })
-  // }
-  //
+  _endReach = ({ distanceFromEnd }) => {
+    // console.warn('_endReach=====>distanceFromEnd', distanceFromEnd)
+    // if( distanceFromEnd > 50 || distanceFromEnd < 0) {
+    //   return
+    // }
+    const { list } = this.props
+    // const page = list.get('data') && list.get('data').get('page')
+    const typeId = list.get('id')
+    const pageNum = list.get('page')
+    const loadMoreLoading = list.get('loadMoreloading')
+
+    if (loadMoreLoading || !this.hasMore() || !typeId) {
+      return
+    }
+
+    this.props.actions.loadMoreListRequested({ typeId, page: pageNum + 1, limit: 10 })
+  }
+
   // _scrollToEnd = () => {
   //   console.log('RIGHT _scrollToEnd >>>')
   // }
-  //
-  // _renderHeader = () => (
-  //   <View>
-  //     <Text style={styles.mainTitle}>新鲜果蔬</Text>
-  //   </View>
-  // )
+
+  _renderHeader = () => (
+    <View>
+      <Text style={styles.mainTitle}>食客皆宜</Text>
+    </View>
+  )
 
   _renderFooter = () => {
     const { list } = this.props
     const loadMoreLoading = list.get('loadMoreloading')
+    const loadMoreLoaded = list.get('loadMoreloaded')
     const loadMoreError = list.get('loadMoreError')
     const loadMoreShowError = list.get('loadMoreShowError')
 
     if (loadMoreLoading) {
-      return <View>
-        <Text>正在加载中。。</Text>
+      return <View style={styles.loadingTip}>
+        <ActivityIndicator /><Text style={styles.tipText}>正在加载中。。</Text>
       </View>
     }
     if (loadMoreShowError && loadMoreError) {
-      <View>
+      return <View style={styles.loadingTip}>
         <Text>加载失败。。{loadMoreError}</Text>
       </View>
     }
-    return <View>
-      <Text>没有更多了</Text>
+
+    if (this.hasMore() && loadMoreLoaded) {
+      return <View style={styles.loadingTip}>
+        <Text>下拉加载更多数据~</Text>
     </View>
+    }
+
+    if (!this.hasMore()) {
+      return <View style={styles.loadingTip}>
+        <Text>已无更多数据~</Text>
+    </View>
+    }
+
+    return <View style={styles.loadingTip}>
+      <Text>~</Text>
+  </View>
+
   }
 
   _renderPlaceholder = () => (
@@ -287,7 +262,7 @@ export default class Right extends React.PureComponent {
           // extraData={this.state}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
-          // onEndReached={this._endReach}
+          onEndReached={this._endReach}
           // onEndReachedThreshold={0.1}
           onMomentumScrollBegin={()=>{
               // AlertIOS.alert('onMomentumScrollStart...@@@@@')
@@ -296,12 +271,12 @@ export default class Right extends React.PureComponent {
               // AlertIOS.alert('onMomentumScrollEnd!!!@@@@@')
           }}
           // onRefresh={this._onRefresh}
-          // onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.1}
           // refreshing={false}
-          scrollToEnd={this._scrollToEnd}
+          // scrollToEnd={this._scrollToEnd}
           bounces={false}
-          // ListHeaderComponent={this._renderHeader}
-          // ListFooterComponent={this._renderFooter}
+          ListHeaderComponent={this._renderHeader}
+          ListFooterComponent={this._renderFooter}
           showsVerticalScrollIndicator={false}
           // ListEmptyComponent={this._renderPlaceholder}
         />
@@ -386,6 +361,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     bottom: 10,
     right: 16,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+    // backgroundColor: 'red'
   },
 
   addNumber: {
@@ -395,7 +375,8 @@ const styles = StyleSheet.create({
 
   flatWrap: {
     flex: 1,
-    // paddingBottom: 50,
+    paddingBottom: 60,
+    // backgroundColor: 'red'
     // minHeight: 200
   },
 
@@ -403,5 +384,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'red',
     minHeight: 600
+  },
+  loadingTip: {
+    display: 'flex',
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'yellow'
+  },
+  tipText: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 10
   }
 })

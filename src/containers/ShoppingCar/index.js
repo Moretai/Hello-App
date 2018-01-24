@@ -77,12 +77,20 @@ export default class ShoppingCar extends React.PureComponent {
         <TouchableOpacity
           style={styles.chooseAll}
           >
-            {
-              (dataLength && statusLength && dataLength === statusLength) ?
-              <Icon style={styles.icon} onPress={this.toggleOneSelected.bind(this, 'all')} name="ios-checkmark-circle-outline" size={30} color="#5dbb80" />
-              :
-              <Icon style={styles.icon} onPress={this.toggleOneSelected.bind(this, 'all')} name="ios-radio-button-off-outline" size={30} color="#9a9a9a" />
-            }
+          <TouchableOpacity
+             onPress={this.toggleOneSelected.bind(this, 'all')}
+            >
+            <View
+              style={styles.clickArea}
+              >
+              {
+                (dataLength && statusLength && dataLength === statusLength) ?
+                <Icon style={styles.icon} name="ios-checkmark-circle" size={30} color="#5dbb80"  backgroundColor="#3b5998"/>
+                :
+                <Icon style={styles.icon} name="ios-radio-button-off-outline" size={30} color="#9a9a9a" backgroundColor="#3b5998"/>
+              }
+            </View>
+          </TouchableOpacity>
         </TouchableOpacity>
         <Text>全选</Text>
         <TouchableOpacity
@@ -146,12 +154,12 @@ export default class ShoppingCar extends React.PureComponent {
       <SwipeAction
         right={[
           {
-            text: 'Cancel',
+            text: '取消',
             onPress: () => console.log('cancel'),
             style: { backgroundColor: '#ddd', color: 'white' },
           },
           {
-            text: 'Delete',
+            text: '删除',
             onPress: () => this.deleteOne.bind(this, item.id)(),
             // onPress: () => console.log('DELETE'),
             style: { backgroundColor: '#F4333C', color: 'white' },
@@ -165,14 +173,18 @@ export default class ShoppingCar extends React.PureComponent {
         <View style={styles.rightItemWrap}>
           <View style={styles.rightItemLeft}>
             <TouchableOpacity
-              style={styles.chooseDot}
+              onPress={this.toggleOneSelected.bind(this, item.id, item.checked)}
               >
+              <View
+                style={styles.clickArea}
+                >
                 {
                   item.checked === '1'?
-                  <Icon style={styles.icon} onPress={this.toggleOneSelected.bind(this, item.id, item.checked)} name="ios-checkmark-circle-outline" size={30} color="#5dbb80" />
+                  <Icon style={styles.icon}  name="ios-checkmark-circle" size={30} color="#5dbb80" />
                   :
-                  <Icon style={styles.icon} onPress={this.toggleOneSelected.bind(this, item.id, item.checked)} name="ios-radio-button-off-outline" size={30} color="#9a9a9a" />
+                  <Icon style={styles.icon} name="ios-radio-button-off-outline" size={30} color="#9a9a9a" />
                 }
+              </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={this._navToDetail}>
               <Image
@@ -198,9 +210,9 @@ export default class ShoppingCar extends React.PureComponent {
               >
               <Text>输入数量</Text>
             </TouchableOpacity>
-            <Icon onPress={this._minusGoods} name="ios-remove-circle-outline" size={22} color="#4F8EF7" />
+            <Icon onPress={this._minusGoods} name="ios-remove-circle-outline" size={24} color="#fa4e4c" />
             <Text style={styles.addNumber}>{item.goodsnum}</Text>
-            <Icon onPress={this._addGoods} name="ios-add-circle" size={22} color="#4F8EF7" />
+            <Icon onPress={this._addGoods} name="ios-add-circle" size={24} color="#5dbb80" />
           </View>
         </View>
       </SwipeAction>
@@ -287,7 +299,7 @@ export default class ShoppingCar extends React.PureComponent {
           </View><Text style={styles.rightText}>¥{feeData && feeData.freightfee}</Text>
         </View>
         <View style={styles.btmItem}>
-          <Text style={styles.leftText}>折扣</Text><Text style={styles.rightText}>{feeData && feeData.discount}</Text>
+          <Text style={styles.leftText}>运费起步价折扣</Text><Text style={styles.rightText}>{feeData && feeData.discount}</Text>
         </View>
         <View style={[styles.btmItem, styles.btmItemTwo]}>
           <Text style={styles.leftText}>合计:</Text><Text style={[styles.rightText, styles.rightTextTwo]}>¥{feeData && feeData.finalfee}</Text>
@@ -415,7 +427,7 @@ const styles = StyleSheet.create({
   },
 
   chooseAll: {
-    paddingLeft: 20,
+    // paddingLeft: 20,
     paddingRight: 20
   },
 
@@ -592,5 +604,13 @@ const styles = StyleSheet.create({
   dialogStyle: {
     position: 'absolute',
     top: height * 0.1
-  }
+  },
+  clickArea: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 60,
+    height: 46,
+    // backgroundColor: 'red',
+  },
 })

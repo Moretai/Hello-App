@@ -8,8 +8,8 @@ GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest
 
 export const fetchJxy = async(method = 'GET', endPoint = '/hello', params = {}, customeHeaders = {}) => {
   // let url = 'http://localhost:8888/api' + endPoint
-  // let url = 'http://120.78.166.233:8080/api' + endPoint
-  let url = 'http://192.168.0.110:8080/api' + endPoint
+  let url = 'http://120.78.166.233:8080/api' + endPoint
+  // let url = 'http://192.168.0.110:8080/api' + endPoint
   // let url = 'http://192.168.102.36:8888/api' + endPoint
   // const token = getLocalToken || null
   const token = await getLocalToken('token') || null

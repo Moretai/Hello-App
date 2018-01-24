@@ -86,7 +86,7 @@ const dataB = Immutable.fromJS({
   form: 'addAddress',
   validate
 })
-class AddNewAddress extends React.Component {
+class AddNewAddress extends React.PureComponent {
 
   submit = values => {
     const { initialValues } = this.props
@@ -129,7 +129,7 @@ class AddNewAddress extends React.Component {
     }, dispatch)
   })
 )
-export default class EditAddress extends React.Component {
+export default class EditAddress extends React.PureComponent {
   constructor(props) {
     super(props)
   }

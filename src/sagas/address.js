@@ -18,7 +18,7 @@ function* addAddress(action) {
 }
 
 function* addAddressSucceed() {
-  yield call(Toast.success, '地址添加成功', 1)
+  yield fork(Toast.success, '地址添加成功', 1)
   yield call(delay, 1000)
   yield reset('addAddress')
   //TODO route change
@@ -26,7 +26,7 @@ function* addAddressSucceed() {
 }
 
 function* addAddressFailed(action) {
-  yield call(Toast.fail, '地址添加失败', 1)
+  yield fork(Toast.fail, '地址添加失败', 1)
 }
 
 function* fetchAllAddress(action) {
@@ -52,12 +52,12 @@ function* setDefaultAddress(action) {
 }
 
 function* setDefaultAddressSucceed() {
-    yield call(Toast.success, '设置地址成功', 1)
+    yield fork(Toast.success, '设置地址成功', 1)
     yield put(actions.addressAllRequested())
 }
 
 function* setDefaultAddressFailed() {
-    yield call(Toast.fail, '设置地址失败', 1)
+    yield fork(Toast.fail, '设置地址失败', 1)
 }
 
 function* removeAddress(action) {
@@ -71,12 +71,12 @@ function* removeAddress(action) {
 }
 
 function* removeAddressSucceed() {
-  yield call(Toast.success, '删除地址成功', 1)
+  yield fork(Toast.success, '删除地址成功', 1)
   yield put(actions.addressAllRequested())
 }
 
 function* removeAddressFailed() {
-  yield call(Toast.fail, '删除地址失败', 1)
+  yield fork(Toast.fail, '删除地址失败', 1)
 }
 
 function* getOneAddress(action) {
@@ -106,13 +106,13 @@ function* updateAddress(action) {
 }
 
 function* updateAddressSucceed() {
-  yield call(Toast.success, '更新地址成功', 1)
+  yield fork(Toast.success, '更新地址成功', 1)
   yield reset('addAddress')
   yield put(locationChange('AddressList'))
 }
 
 function* updateAddressFailed() {
-  yield call(Toast.fail, '删除地址失败', 1)
+  yield fork(Toast.fail, '删除地址失败', 1)
 }
 
 function* addressDefault(action) {

@@ -67,7 +67,7 @@ import {
  form: 'loginForm',
  validate
 })
-export default class Login extends React.Component {
+export default class Login extends React.PureComponent {
   static navigationOptions = ({navigation}) => ({
       title: '收货地址',
       headerLeft: (

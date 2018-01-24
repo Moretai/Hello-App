@@ -6,7 +6,7 @@ import {
  } from 'react-native'
 import { withNavigation, NavigationActions } from 'react-navigation'
 
-export default class Detail extends React.Component {
+export default class Detail extends React.PureComponent {
   static navigationOptions = ({navigation}) => ({
       title: `${navigation.state.params.id}详情`,
       headerLeft: (

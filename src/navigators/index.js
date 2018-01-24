@@ -100,7 +100,7 @@ const UserStack = StackNavigator({
     screen: User,
     path: '/',
     navigationOptions: {
-      title: 'User',
+      title: '我的',
       ...headerConfig
     }
   }
@@ -111,7 +111,7 @@ const ShoppingCarStack = StackNavigator({
     screen: ShoppingCar,
     path: '/',
     navigationOptions: {
-      title: 'ShoppingCar',
+      title: '购物车',
       ...headerConfig
     }
   }
@@ -122,7 +122,7 @@ const SearchStack = StackNavigator({
     screen: Search,
     path: '/',
     navigationOptions: {
-      title: 'Search',
+      title: '搜索',
       ...headerConfig
     }
   }
@@ -133,7 +133,7 @@ const HomeStack = StackNavigator({
     screen: Home,
     path: '/',
     navigationOptions: {
-      title: 'Home',
+      title: '食客',
       ...headerConfig
     }
   }
@@ -185,7 +185,7 @@ const Tabs = TabNavigator(
         tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
           <Ionicons
             name={focused ? 'ios-home' : 'ios-home-outline'}
-            size={22}
+            size={28}
             style={{ color: tintColor }}
           />
         )
@@ -199,7 +199,7 @@ const Tabs = TabNavigator(
         tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
           <Ionicons
             name={focused ? 'ios-search' : 'ios-search-outline'}
-            size={22}
+            size={28}
             style={{ color: tintColor }}
           />
         )
@@ -213,7 +213,7 @@ const Tabs = TabNavigator(
         tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
           <Ionicons
             name={focused ? 'ios-cart' : 'ios-cart-outline'}
-            size={22}
+            size={28}
             style={{ color: tintColor }}
           />
         )
@@ -223,18 +223,18 @@ const Tabs = TabNavigator(
       screen: UserStack,
       path: '/user',
       navigationOptions: {
-        tabBarLabel: 'Shop',
+        tabBarLabel: '我的',
         tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
           <Ionicons
             name={focused ? 'ios-people' : 'ios-people-outline'}
-            size={22}
+            size={28}
             style={{ color: tintColor }}
           />
         )
       }
     },
     Test: {
-      screen: TestStack,
+      screen: LoginStack,
       path: '/test',
       navigationOptions: {
         tabBarLabel: 'Shop',
@@ -252,12 +252,13 @@ const Tabs = TabNavigator(
     tabBarPosition: 'bottom',
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: 'User',
+    initialRouteName: 'ShoppingCar',
     tabBarOptions: {
       inactiveBackgroundColor: '#fff',
       activeBackgroundColor: '#fff',
-      activeTintColor: '#3174f2',
+      activeTintColor: '#5dbb80',
       inactiveTintColor: '#9c9c9c',
+      height: 100,
       style: {
         backgroundColor: '#fff',
         height: 52,
@@ -265,6 +266,8 @@ const Tabs = TabNavigator(
         borderColor: 'red'
       },
       tabStyle: {
+        // height: 100,
+        // paddingTop: 20
       },
       indicatorStyle: {
         backgroundColor: '#3174f2'
@@ -274,7 +277,10 @@ const Tabs = TabNavigator(
       },
       iconStyle: {
         paddingBottom: 0,
-        marginBottom: -4
+        marginBottom: -4,
+        marginTop: 10,
+        // height: 40,
+        // width: 30
       },
       showIcon: true
     }
@@ -313,7 +319,7 @@ export const Navigator = StackNavigator(
   })
 )
 
-export default class AppWithNavigationState extends Component {
+export default class AppWithNavigationState extends React.PureComponent {
   render() {
     const { dispatch, navigator } = this.props
 

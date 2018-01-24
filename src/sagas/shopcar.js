@@ -18,7 +18,7 @@ function* shopCarSucceed() {
 }
 
 function* addGoodsToshopCar(action) {
-  // Toast.fail('Load failed !!!', 1)
+  // Toast.fail('Load failed !!!', 0.4)
   try {
     const result = yield call(api.addGoodsToCar, action.payload)
     yield put(actions.addGoodsToshopCarSucceed(result))
@@ -28,11 +28,11 @@ function* addGoodsToshopCar(action) {
 }
 
 function* addGoodsToshopCarSucceed() {
-  yield call(Toast.success, '加入购物车成功', 1)
+  yield fork(Toast.success, '加入购物车成功', 0.4)
 }
 
 function* addGoodsToshopCarFailed() {
-  yield call(Toast.fail, '加入购物车失败', 1)
+  yield fork(Toast.fail, '加入购物车失败', 0.4)
 }
 
 function* addLotsGoods(action) {
@@ -46,17 +46,17 @@ function* addLotsGoods(action) {
 
 function* addLotsGoodsSucceed() {
   yield put(actions.shopCarRequested())
-  yield call(Toast.success, '数量设置成功', 1)
+  yield fork(Toast.success, '数量设置成功', 0.4)
 }
 
 function* addLotsGoodsFailed(action) {
   const error = action.payload
   if (error === 'NOT_ENOUGH') {
-    yield call(Toast.fail, '此商品库存不足', 1)
+    yield fork(Toast.fail, '此商品库存不足', 0.4)
   } else if (error === 'REFRESH_PAGE') {
-    yield call(Toast.fail, '此商品已下架', 1)
+    yield fork(Toast.fail, '此商品已下架', 0.4)
   } else {
-    yield call(Toast.fail, '数量设置失败', 1)
+    yield fork(Toast.fail, '数量设置失败', 0.4)
   }
   yield put(actions.shopCarRequested())
 }
@@ -71,7 +71,7 @@ function* toggleOneGoodSelectedRequested(action) {
 }
 
 function* toggleOneGoodSelectedSucceed() {
-  yield call(Toast.success, '操作成功', 1)
+  yield fork(Toast.success, '操作成功', 0.4)
   yield put(actions.shopCarRequested())
 }
 
@@ -85,12 +85,12 @@ function* deleteOneGoodOrAll(action) {
 }
 
 function* deleteOneGoodOrAllSucceed() {
-  yield call(Toast.success, '操作成功', 1)
+  yield fork(Toast.success, '操作成功', 0.4)
   yield put(actions.shopCarRequested())
 }
 
 function* deleteOneGoodOrAllFailed() {
-  yield call(Toast.fail, '操作失败', 1)
+  yield fork(Toast.fail, '操作失败', 0.4)
 }
 
 function* getFeeInfo(action) {

@@ -19,6 +19,7 @@ import * as addressActions from '../../actions/address'
 const { height, width } = Dimensions.get('window')
 
 // TODO BUG 输入完成 表单未销毁
+// BUG 新增 -> 列表 -> 列表返回键9
 
 @connect(
   state => ({

@@ -27,7 +27,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
   })
 )
 @withNavigation
-export default class Search extends React.Component {
+export default class Search extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {

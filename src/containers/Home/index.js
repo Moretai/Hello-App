@@ -30,7 +30,7 @@ const { height, width } = Dimensions.get('window')
         }, dispatch)
   })
 )
-export default class Home extends React.Component {
+export default class Home extends React.PureComponent {
   constructor(props) {
   super(props)
   this.state = {

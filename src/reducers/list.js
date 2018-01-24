@@ -20,19 +20,10 @@ const initialState = Immutable.fromJS({
     loadMoreloaded: false,
     loadMoreError: null,
     loadMoreShowError: false,
+    id: null,
+    page: 1
   },
 })
-
-const mockData = {
-    page: '100',
-    size: '100',
-    total: '500',
-    data: [
-      {
-        id: '10086'
-      }
-    ]
-  }
 
 export default handleActions({
   [actions.fetchCategoryRequested](state, action) {
@@ -55,6 +46,11 @@ export default handleActions({
     .set('data', null)
     .set('error', action.payload)
     .set('showError', true))
+  },
+  [actions.nowFetchCategoryIdAndPage](state, action) {
+    return state.update('list', v => v
+    .set('id', action.payload.id)
+    .set('page', action.payload.page))
   },
   [actions.fetchListRequested](state, action) {
     return state.update('list', v => v

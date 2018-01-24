@@ -35,7 +35,7 @@ const mapTypeOrder = (type) => {
 
 
 @withNavigation
-export default class OrderList extends React.Component {
+export default class OrderList extends React.PureComponent {
   static navigationOptions = ({navigation}) => ({
       title: `${mapTypeOrder(navigation.state.params.type)}订单`,
       headerLeft: (

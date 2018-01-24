@@ -14,9 +14,11 @@ function* fetchCategory() {
 }
 
 function* fetchList(action) {
-  console.warn('FETCH List%%%%%')
+  console.warn('FETCH List%%%%%-->', action.payload)
+  const { typeId, page } = action.payload
   try {
     const result = yield call(api.fetchList, action.payload)
+    yield put(actions.nowFetchCategoryIdAndPage({ id: typeId, page }))
     yield put(actions.fetchListSucceed(result))
   } catch (e) {
     yield put(actions.fetchListFailed(e.message))
@@ -28,6 +30,7 @@ function* handleFirstList(action) {
   console.warn('handleFirstList=====>', action.payload);
   if( data && data.length ) {
     const firstId = data[0]['id']
+    yield put(actions.nowFetchCategoryIdAndPage({ id: firstId, page: 1 }))
     console.warn('firstId is=====>', firstId);
     yield put(actions.fetchListRequested({ typeId: firstId, page: 1, limit: 10 }))
   }
@@ -35,8 +38,10 @@ function* handleFirstList(action) {
 
 function* loadMoreList(action) {
   console.log('FETCH LOAD MORE LIST')
+  const { typeId, page } = action.payload
   try {
     const result = yield call(api.fetchList, action.payload)
+    yield put(actions.nowFetchCategoryIdAndPage({ id: typeId, page }))
     yield put(actions.loadMoreListSucceed(result))
   } catch (e) {
     yield put(actions.loadMoreListFailed(e.message))

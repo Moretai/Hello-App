@@ -19,7 +19,7 @@ console.ignoredYellowBox = ['Remote debugger']
     actions: bindActionCreators(routerActions, dispatch)
   })
 )
-class Conatienr extends React.Component {
+class Conatienr extends React.PureComponent {
   componentDidMount() {
     this.props.actions.locationInit()
     console.log('App componentDidMount...')
@@ -30,7 +30,7 @@ class Conatienr extends React.Component {
     )
   }
 }
-export default class App extends React.Component {
+export default class App extends React.PureComponent {
   render() {
     return (
       <Provider store={store}>
