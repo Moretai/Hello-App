@@ -17,6 +17,7 @@ import AddNewAddress from '../containers/AddNewAddress'
 import SearchList from '../containers/SearchList'
 import OrderList from '../containers/OrderList'
 import Test from '../containers/Test/demoa'
+import OrderConfirm from '../containers/OrderConfirm'
 
 const headerConfig = {
   headerStyle: {
@@ -36,6 +37,17 @@ const headerConfig = {
 const addRightToBalance = {
   headerRight: (<View />)
 }
+
+const OrderConfirmStack = StackNavigator({
+  OrderList: {
+    screen: OrderConfirm,
+    // path: '/addaddress',
+    navigationOptions: ({navigation}) => ({
+      ...headerConfig,
+      ...addRightToBalance
+    })
+  }
+})
 
 const OrderListStack = StackNavigator({
   OrderList: {
@@ -246,13 +258,27 @@ const Tabs = TabNavigator(
           />
         )
       }
+    },
+    OrderConfirmStack: {
+      screen: OrderConfirmStack,
+      path: '/test',
+      navigationOptions: {
+        tabBarLabel: 'Shop',
+        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
+          <Ionicons
+            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            size={22}
+            style={{ color: tintColor }}
+          />
+        )
+      }
     }
   },
   {
     tabBarPosition: 'bottom',
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: 'ShoppingCar',
+    initialRouteName: 'OrderConfirmStack',
     tabBarOptions: {
       inactiveBackgroundColor: '#fff',
       activeBackgroundColor: '#fff',
