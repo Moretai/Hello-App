@@ -3,12 +3,55 @@ import {
   View,
   Text,
 } from 'react-native'
-import { SwipeAction, List, DatePicker } from 'antd-mobile';
+import { Picker, List, WhiteSpace } from 'antd-mobile';
+import { district, provinceLite } from 'antd-mobile-demo-data';
+console.warn('district===>', district);
 
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
 // GMT is not currently observed in the UK. So use UTC now.
 const utcNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
+
+
+const data = [
+  // {
+  //   value: '2018',
+  //   label: '2018',
+  //   children: [
+      {
+        value: '01',
+        label: '01',
+        children: [
+          {
+          value: '01',
+          label: '01',
+          children: [
+            {
+              value: '9-10',
+              label: '9:30~10:30',
+              // children: [
+              //   {
+              //     value: '01',
+              //     label: '01',
+              //   }
+              // ]
+            }
+          ]},
+          {
+          value: '02',
+          label: '02',
+          children: [
+            {
+              value: '9-10',
+              label: '9-10'
+            }
+          ]}
+        ]
+      }
+  //   ]
+  // }
+]
+
 class SwipeActionExample extends React.PureComponent {
   state = {
     date: now,
@@ -19,21 +62,34 @@ class SwipeActionExample extends React.PureComponent {
     visible: false,
   }
 
+  onChange = (v) => {
+    console.warn('onChange value ===>', v);
+  }
+
+  onOk = (v) => {
+    console.warn('onOk value ====>', v);
+  }
+
+  onPickerChange = (v) => {
+    console.warn('onPickerChange value ====>', v);
+  }
+
   render() {
     return(
       <List style={{ backgroundColor: 'white' }}>
-      <DatePicker
-          mode="time"
-          use12Hours
-          minuteStep={2}
-          // format="HH:mm"
-          title="Select Date"
-          // extra="Optional"
-          value={this.state.time}
-          onChange={time => this.setState({ time })}
+        <Picker
+          title="选择地区"
+          extra="请选择(可选)"
+          data={data}
+          cols={2}
+          value={this.state.pickerValue}
+          onChange={this.onChange}
+          onPickerChange={this.onPickerChange}
+          onOk={this.onOk}
+          itemStyle={{width:100}}
         >
-        <List.Item arrow="horizontal">Time (am/pm)</List.Item>
-    </DatePicker>
+          <List.Item arrow="horizontal">Multiple</List.Item>
+        </Picker>
     </List>
     )
   }

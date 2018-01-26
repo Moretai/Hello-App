@@ -130,6 +130,10 @@ ansi@^0.3.0, ansi@~0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/ansi/-/ansi-0.3.1.tgz#0c42d4fb17160d5a9af1e484bace1c66922c1b21"
 
+antd-mobile-demo-data@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/antd-mobile-demo-data/-/antd-mobile-demo-data-0.2.0.tgz#049731dc3c48c42603185e4338724879224c8442"
+
 antd-mobile@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/antd-mobile/-/antd-mobile-2.1.2.tgz#a974a3328e67f5fb0c4532df21f7150b622d0b5d"

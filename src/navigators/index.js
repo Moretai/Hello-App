@@ -18,6 +18,7 @@ import SearchList from '../containers/SearchList'
 import OrderList from '../containers/OrderList'
 import Test from '../containers/Test/demoa'
 import OrderConfirm from '../containers/OrderConfirm'
+// import Test from '../containers/Test'
 
 const headerConfig = {
   headerStyle: {
@@ -151,6 +152,17 @@ const HomeStack = StackNavigator({
   }
 })
 
+// const TestStack = StackNavigator({
+//   Home: {
+//     screen: Test,
+//     path: '/',
+//     navigationOptions: {
+//       title: '食客',
+//       ...headerConfig
+//     }
+//   }
+// })
+
 const DetailStack = StackNavigator({
   Detail: {
     screen: Detail,
@@ -247,6 +259,34 @@ const Tabs = TabNavigator(
     },
     Test: {
       screen: LoginStack,
+      path: '/test',
+      navigationOptions: {
+        tabBarLabel: 'Shop',
+        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
+          <Ionicons
+            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            size={22}
+            style={{ color: tintColor }}
+          />
+        )
+      }
+    },
+    OrderConfirmStack: {
+      screen: OrderConfirmStack,
+      path: '/test',
+      navigationOptions: {
+        tabBarLabel: 'Shop',
+        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
+          <Ionicons
+            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            size={22}
+            style={{ color: tintColor }}
+          />
+        )
+      }
+    },
+    Hello: {
+      screen: TestStack,
       path: '/test',
       navigationOptions: {
         tabBarLabel: 'Shop',
