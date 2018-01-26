@@ -33,7 +33,7 @@ const { height, width } = Dimensions.get('window')
   })
 )
 @withNavigation
-export default class AddressList extends React.Component {
+export default class AddressList extends React.PureComponent {
   // TODO 新增和更新
   static navigationOptions = ({ navigation }) => {
     console.warn('navigation---->', navigation);

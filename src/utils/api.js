@@ -8,8 +8,8 @@ import { getLocalToken } from './tools'
 
 export const fetchJxy = async(method = 'GET', endPoint = '/hello', params = {}, customeHeaders = {}) => {
   // let url = 'http://localhost:8888/api' + endPoint
-  // let url = 'http://120.78.166.233:8080/api' + endPoint
-  let url = 'http://192.168.0.107:8080/api' + endPoint
+  let url = 'http://120.78.166.233:8080/api' + endPoint
+  // let url = 'http://192.168.0.107:8080/api' + endPoint
   const token = await getLocalToken('token') || null
   console.warn('token is ==>', token);
   const headers = Object.assign({
