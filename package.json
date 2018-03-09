@@ -16,6 +16,7 @@
 		"react": "16.0.0",
 		"react-dom": "^16.2.0",
 		"react-native": "0.51.0",
+		"react-native-check-app-install": "^0.0.4",
 		"react-native-extended-stylesheet": "^0.8.0",
 		"react-native-popup-dialog": "^0.10.44",
 		"react-native-snap-carousel": "3.4.0",
