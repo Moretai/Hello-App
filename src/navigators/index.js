@@ -298,27 +298,13 @@ const Tabs = TabNavigator(
           />
         )
       }
-    },
-    OrderConfirmStack: {
-      screen: OrderConfirmStack,
-      path: '/test',
-      navigationOptions: {
-        tabBarLabel: 'Shop',
-        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
-          <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
-            size={22}
-            style={{ color: tintColor }}
-          />
-        )
-      }
     }
   },
   {
     tabBarPosition: 'bottom',
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: 'OrderConfirmStack',
+    initialRouteName: 'Hello',
     tabBarOptions: {
       inactiveBackgroundColor: '#fff',
       activeBackgroundColor: '#fff',

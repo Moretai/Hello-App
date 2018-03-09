@@ -3,9 +3,8 @@ import {
   View,
   Text,
 } from 'react-native'
-import { Picker, List, WhiteSpace } from 'antd-mobile';
+import { Picker, List, WhiteSpace, DatePicker } from 'antd-mobile';
 import { district, provinceLite } from 'antd-mobile-demo-data';
-console.warn('district===>', district);
 
 const nowTimeStamp = Date.now();
 const now = new Date(nowTimeStamp);
@@ -14,53 +13,45 @@ const utcNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
 
 
 const data = [
-  // {
-  //   value: '2018',
-  //   label: '2018',
-  //   children: [
+  {
+    value: 'a',
+    label: '上午',
+    children: [
       {
         value: '01',
-        label: '01',
-        children: [
-          {
-          value: '01',
-          label: '01',
-          children: [
-            {
-              value: '9-10',
-              label: '9:30~10:30',
-              // children: [
-              //   {
-              //     value: '01',
-              //     label: '01',
-              //   }
-              // ]
-            }
-          ]},
-          {
-          value: '02',
-          label: '02',
-          children: [
-            {
-              value: '9-10',
-              label: '9-10'
-            }
-          ]}
-        ]
-      }
-  //   ]
-  // }
+        label: '9.00 - 9.30',
+      },
+      {
+        value: '02',
+        label: '9.30 - 10.00',
+      },
+    ]
+  },
+  {
+    value: 'b',
+    label: '下午',
+    children: [
+      {
+        value: '03',
+        label: '13.00 - 13.30',
+      },
+      {
+        value: '04',
+        label: '13.30 - 14.00',
+      },
+    ]
+  }
 ]
 
 class SwipeActionExample extends React.PureComponent {
-  state = {
-    date: now,
-    time: now,
-    utcDate: utcNow,
-    dpValue: null,
-    customChildValue: null,
-    visible: false,
+  constructor(props) {
+    super(props)
+    this.state = {
+      date: now,
+      value:['a', '01']
+    }
   }
+
 
   onChange = (v) => {
     console.warn('onChange value ===>', v);
@@ -68,6 +59,9 @@ class SwipeActionExample extends React.PureComponent {
 
   onOk = (v) => {
     console.warn('onOk value ====>', v);
+    this.setState({
+      value: v
+    })
   }
 
   onPickerChange = (v) => {
@@ -76,21 +70,34 @@ class SwipeActionExample extends React.PureComponent {
 
   render() {
     return(
-      <List style={{ backgroundColor: 'white' }}>
-        <Picker
-          title="选择地区"
-          extra="请选择(可选)"
-          data={data}
-          cols={2}
-          value={this.state.pickerValue}
-          onChange={this.onChange}
-          onPickerChange={this.onPickerChange}
-          onOk={this.onOk}
-          itemStyle={{width:100}}
+      <View>
+        <DatePicker
+          mode="date"
+          title="Select Date"
+          extra="Optional"
+          value={this.state.date}
+          onChange={date => this.setState({ date })}
         >
-          <List.Item arrow="horizontal">Multiple</List.Item>
-        </Picker>
-    </List>
+          <List.Item arrow="horizontal">Date</List.Item>
+        </DatePicker>
+        <List style={{ backgroundColor: 'white' }}>
+          <Picker
+            title="选择地区"
+            // extra="请选择(可选)"
+            data={data}
+            value={['a', '04']}
+            cols={2}
+            // cascade={false}
+            value={this.state.value}
+            // onChange={this.onChange}
+            // onPickerChange={this.onPickerChange}
+            onOk={this.onOk}
+            itemStyle={{width:200}}
+            >
+              <List.Item arrow="horizontal">Mu1111</List.Item>
+          </Picker>
+        </List>
+      </View>
     )
   }
 }

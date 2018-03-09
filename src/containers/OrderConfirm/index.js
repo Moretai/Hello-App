@@ -16,7 +16,9 @@ import {
   Image,
  } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { DatePicker, List } from 'antd-mobile';
+import { DatePicker, List } from 'antd-mobile'
+import OneYearTimePicker from '../../components/OneYearTimePicker'
+import OneDayTimePicker from '../../components/OneDayTimePicker'
 import * as actions from '../../actions/order'
 import { withNavigation, NavigationActions } from 'react-navigation'
 
@@ -88,38 +90,8 @@ export default class OrderConfirm extends React.PureComponent {
               </View>
             </View>
           </View>
-          <View style={[styles.block, styles.blockCell]}>
-            <TouchableOpacity
-              style={styles.arrowBtn}
-              onPress={this.manageAddress}
-              >
-              <View style={styles.cellPart}>
-                <Icon style={styles.icon} name="ios-time-outline" size={22} color="#5dbb80" />
-                <Text style={styles.addressInfo}>选择送货时间</Text>
-                <DatePicker
-                  value={this.state.date}
-                  onChange={date => this.setState({ date })}
-                  >
-                  <Text>heheh</Text>
-                </DatePicker>
-              </View>
-              <View style={styles.cellPart}>
-                  <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
-              </View>
-            </TouchableOpacity>
-          </View>
-          <List className="date-picker-list" style={{ backgroundColor: 'white' }}>
-            <DatePicker
-               mode="time"
-               format="HH:mm"
-               title="Select Time"
-               value={this.state.customChildValue}
-               onChange={v => this.setState({ customChildValue: v })}
-               extra="click to choose"
-             >
-               <List.Item arrow="horizontal">UTC time</List.Item>
-             </DatePicker>
-     </List>
+          <OneYearTimePicker />
+          <OneDayTimePicker />
           <View
             style={styles.oneLineWrap}
             >
