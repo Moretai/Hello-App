@@ -1291,7 +1291,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.shikejieyi.www.wuxishengxian;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shikejieyi.www.wuxishengxian.test;
 				PRODUCT_NAME = hello;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1315,7 +1315,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.shikejieyi.www.wuxishengxian;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shikejieyi.www.wuxishengxian.test;
 				PRODUCT_NAME = hello;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
