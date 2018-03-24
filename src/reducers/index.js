@@ -15,6 +15,7 @@ import address from './address'
 import info from './info'
 import activity from './activity'
 import fee from './fee'
+import pay from './pay'
 import Immutable from 'immutable'
 var installDevTools = require("immutable-devtools")
 installDevTools(Immutable)
@@ -34,5 +35,6 @@ export default combineReducers({
   info,
   activity,
   fee,
+  pay,
   form: formReducer
 })

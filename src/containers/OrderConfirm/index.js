@@ -15,11 +15,13 @@ import {
   AlertIOS,
   Image,
  } from 'react-native'
+import Alipay from 'react-native-alipay-zmt'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { DatePicker, List } from 'antd-mobile'
 import OneYearTimePicker from '../../components/OneYearTimePicker'
 import OneDayTimePicker from '../../components/OneDayTimePicker'
 import * as actions from '../../actions/order'
+import * as payActions from '../../actions/pay'
 import { withNavigation, NavigationActions } from 'react-navigation'
 
 import letterBgImg from '../../resources/images/letter-3x.png'
@@ -35,6 +37,7 @@ const { height, width } = Dimensions.get('window')
   dispatch => ({
     actions: bindActionCreators({
       ...actions,
+      ...payActions
     }, dispatch)
   })
 )
@@ -54,6 +57,12 @@ export default class OrderConfirm extends React.PureComponent {
     this.state = {
       customChildValue: null
     }
+
+    this.goPay = this.goPay.bind(this)
+  }
+
+  goPay() {
+    this.props.actions.payRequested({ payWay: '1', deliverTimeForm: '1521902807805', deliverTimeTo: '1521906807805' })
   }
 
   // _toggleShow = () => {
@@ -201,6 +210,7 @@ export default class OrderConfirm extends React.PureComponent {
           </View>
           <TouchableOpacity
             style={styles.rightBar}
+            onPress={this.goPay}
             >
             <Text style={styles.goPay}>去支付</Text>
             <Icon style={styles.icon} name="ios-play" size={22} color="#fff" />

@@ -2,104 +2,45 @@ import React from 'react'
 import {
   View,
   Text,
+  TouchableHighlight,
+  ScrollView,
+  StyleSheet
 } from 'react-native'
-import { Picker, List, WhiteSpace, DatePicker } from 'antd-mobile';
-import { district, provinceLite } from 'antd-mobile-demo-data';
+import Alipay from 'react-native-alipay-zmt'
 
-const nowTimeStamp = Date.now();
-const now = new Date(nowTimeStamp);
-// GMT is not currently observed in the UK. So use UTC now.
-const utcNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000));
+export default class App extends React.Component {
 
+Alipay(){
 
-const data = [
-  {
-    value: 'a',
-    label: '上午',
-    children: [
-      {
-        value: '01',
-        label: '9.00 - 9.30',
-      },
-      {
-        value: '02',
-        label: '9.30 - 10.00',
-      },
-    ]
-  },
-  {
-    value: 'b',
-    label: '下午',
-    children: [
-      {
-        value: '03',
-        label: '13.00 - 13.30',
-      },
-      {
-        value: '04',
-        label: '13.30 - 14.00',
-      },
-    ]
-  }
-]
+Alipay.pay("app_id=2015052600090779&biz_content=%7B%22timeout_express%22%3A%2230m%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22total_amount%22%3A%220.01%22%2C%22subject%22%3A%221%22%2C%22body%22%3A%22%E6%88%91%E6%98%AF%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%22%2C%22out_trade_no%22%3A%22IQJZSRC1YMQB5HU%22%7D&charset=utf-8&format=json&method=alipay.trade.app.pay&notify_url=http%3A%2F%2Fdomain.merchant.com%2Fpayment_notify&sign_type=RSA2&timestamp=2016-08-25%2020%3A26%3A31&version=1.0&sign=cYmuUnKi5QdBsoZEAbMXVMmRWjsuUj%2By48A2DvWAVVBuYkiBj13CFDHu2vZQvmOfkjE0YqCUQE04kqm9Xg3tIX8tPeIGIFtsIyp%2FM45w1ZsDOiduBbduGfRo1XRsvAyVAv2hCrBLLrDI5Vi7uZZ77Lo5J0PpUUWwyQGt0M4cj8g%3D")
+.then(result => {
+console.warn("result is ", result);
+show("result is ", result);
+})
+.catch(error => {
+console.warn(error);
+show(error);
+});
 
-class SwipeActionExample extends React.PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      date: now,
-      value:['a', '01']
-    }
-  }
-
-
-  onChange = (v) => {
-    console.warn('onChange value ===>', v);
-  }
-
-  onOk = (v) => {
-    console.warn('onOk value ====>', v);
-    this.setState({
-      value: v
-    })
-  }
-
-  onPickerChange = (v) => {
-    console.warn('onPickerChange value ====>', v);
-  }
-
-  render() {
-    return(
-      <View>
-        <DatePicker
-          mode="date"
-          title="Select Date"
-          extra="Optional"
-          value={this.state.date}
-          onChange={date => this.setState({ date })}
-        >
-          <List.Item arrow="horizontal">Date</List.Item>
-        </DatePicker>
-        <List style={{ backgroundColor: 'white' }}>
-          <Picker
-            title="选择地区"
-            // extra="请选择(可选)"
-            data={data}
-            value={['a', '04']}
-            cols={2}
-            // cascade={false}
-            value={this.state.value}
-            // onChange={this.onChange}
-            // onPickerChange={this.onPickerChange}
-            onOk={this.onOk}
-            itemStyle={{width:200}}
-            >
-              <List.Item arrow="horizontal">Mu1111</List.Item>
-          </Picker>
-        </List>
-      </View>
-    )
-  }
 }
 
-export default SwipeActionExample
+
+render() {
+return (
+
+<ScrollView contentContainerStyle={styles.wrapper}>
+
+<Text style={styles.pageTitle}>Alipay SDK for React Native (iOS)</Text>
+
+    <TouchableHighlight
+      style={styles.button} underlayColor="#f38"
+      onPress={this.Alipay.bind(this)}>
+      <Text style={styles.buttonTitle}>Alipay</Text>
+    </TouchableHighlight>
+
+</ScrollView>
+);
+}
+}
+
+const styles = StyleSheet.create({})

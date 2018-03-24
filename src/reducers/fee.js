@@ -21,7 +21,7 @@ export default handleActions({
   [actions.fetchFeeIntroFailed](state, action) {
     return state.set('loading', false)
     .set('loaded', true)
-    .set('data', Immutable.fromJS(action.payload))
+    .set('data', null)
     .set('error', action.payload)
   }
 }, initialState)

@@ -153,16 +153,16 @@ const HomeStack = StackNavigator({
   }
 })
 
-// const TestStack = StackNavigator({
-//   Home: {
-//     screen: Test,
-//     path: '/',
-//     navigationOptions: {
-//       title: '食客',
-//       ...headerConfig
-//     }
-//   }
-// })
+const TestStack = StackNavigator({
+  Home: {
+    screen: Test,
+    path: '/',
+    navigationOptions: {
+      title: '食客',
+      ...headerConfig
+    }
+  }
+})
 
 const DetailStack = StackNavigator({
   Detail: {
@@ -200,17 +200,17 @@ const OrderDetailStack = StackNavigator({
 //   }
 // })
 
-const TestStack = StackNavigator({
-  OrderDetail: {
-    screen: Test,
-    path: '/',
-    navigationOptions: {
-      title: 'Test',
-      ...headerConfig,
-      ...addRightToBalance
-    }
-  }
-})
+// const TestStack = StackNavigator({
+//   OrderDetail: {
+//     screen: Test,
+//     path: '/',
+//     navigationOptions: {
+//       title: 'Test',
+//       ...headerConfig,
+//       ...addRightToBalance
+//     }
+//   }
+// })
 
 const GoodsListStack = StackNavigator({
   OrderDetail: {
@@ -283,48 +283,20 @@ const Tabs = TabNavigator(
         )
       }
     },
-    // Test: {
-    //   screen: LoginStack,
-    //   path: '/test',
-    //   navigationOptions: {
-    //     tabBarLabel: 'Shop',
-    //     tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
-    //       <Ionicons
-    //         name={focused ? 'ios-settings' : 'ios-settings-outline'}
-    //         size={22}
-    //         style={{ color: tintColor }}
-    //       />
-    //     )
-    //   }
-    // },
-    // OrderConfirmStack: {
-    //   screen: OrderConfirmStack,
-    //   path: '/test',
-    //   navigationOptions: {
-    //     tabBarLabel: 'Shop',
-    //     tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
-    //       <Ionicons
-    //         name={focused ? 'ios-settings' : 'ios-settings-outline'}
-    //         size={22}
-    //         style={{ color: tintColor }}
-    //       />
-    //     )
-    //   }
-    // },
-    // Hello: {
-    //   screen: TestStack,
-    //   path: '/test',
-    //   navigationOptions: {
-    //     tabBarLabel: 'Shop',
-    //     tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
-    //       <Ionicons
-    //         name={focused ? 'ios-settings' : 'ios-settings-outline'}
-    //         size={22}
-    //         style={{ color: tintColor }}
-    //       />
-    //     )
-    //   }
-    // }
+    Test: {
+      screen: TestStack,
+      path: '/test',
+      navigationOptions: {
+        tabBarLabel: 'Shop',
+        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
+          <Ionicons
+            name={focused ? 'ios-settings' : 'ios-settings-outline'}
+            size={22}
+            style={{ color: tintColor }}
+          />
+        )
+      }
+    }
   },
   {
     tabBarPosition: 'bottom',

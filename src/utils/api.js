@@ -185,3 +185,6 @@ export const fetchOneOrderDetail = (params) => fetchJxy('GET', `/selectorderdeta
 export const activityDetail = (params) => fetchJxy('GET', `/selectactivitydetailbyid/${params.id}`)
 
 export const feeIntro = () => fetchJxy('GET', '/selectPriceDescription')
+
+// 支付接口
+export const pay = (params) => fetchJxy('POST', '/insertorder', params)

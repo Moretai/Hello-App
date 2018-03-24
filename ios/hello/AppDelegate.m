@@ -11,6 +11,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import "Alipay.h"
 
 @implementation AppDelegate
 
@@ -32,6 +33,17 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   return YES;
+}
+
+// NOTE: 9.0以后使用新API接口
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options
+{
+  if ([options[@"UIApplicationOpenURLOptionsSourceApplicationKey"]  isEqualToString:@"com.alipay.iphoneclient"]) {
+    [Alipay aliPayParse:url];
+    return YES;
+  }else{
+    return NO;
+  }
 }
 
 @end

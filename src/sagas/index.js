@@ -13,6 +13,7 @@ import address from './address'
 import order from './order'
 import activity from './activity'
 import fee from './fee'
+import pay from './pay'
 import logger from './logger'
 
 let sagas = [
@@ -30,6 +31,7 @@ let sagas = [
   fork(order),
   fork(activity),
   fork(fee),
+  fork(pay),
   fork(logger)
 ]
 
