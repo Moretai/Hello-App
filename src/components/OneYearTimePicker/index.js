@@ -1,6 +1,7 @@
 import React from 'react'
 import {
-  View
+  View,
+  Text,
 } from 'react-native'
 import { Picker, DatePicker, List } from 'antd-mobile'
 
@@ -24,8 +25,13 @@ export default class OneYearTimePicker extends React.PureComponent {
           extra="Optional"
           value={this.state.date}
           onChange={date => this.setState({ date })}
+          itemStyle={{ fontSize: 14 }}
         >
-          <List.Item arrow="horizontal">收货日期</List.Item>
+          <List.Item arrow="horizontal">
+            <Text style={{fontSize: 13}}>
+              收货日期
+            </Text>
+          </List.Item>
         </DatePicker>
       </View>
     )

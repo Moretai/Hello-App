@@ -112,7 +112,7 @@ export default class User extends React.PureComponent {
               style={styles.listCell}
               onPress={this.fnPress.bind(this, 'done')}
               >
-              <Icon style={styles.icon} name="ios-clipboard-outline" size={30} color="#959595" />
+              <Icon style={styles.icon} name="ios-wine-outline" size={30} color="#959595" />
             <Text style={styles.listCellText}>已完成</Text>
             </TouchableOpacity>
           </View>

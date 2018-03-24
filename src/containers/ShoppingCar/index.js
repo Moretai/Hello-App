@@ -21,6 +21,7 @@ import {
  import * as addressActions from '../../actions/address'
  import * as infoActions from '../../actions/info'
  import * as orderActions from '../../actions/order'
+ import * as feeActions from '../../actions/fee'
  import Icon from 'react-native-vector-icons/Ionicons'
  import { withNavigation } from 'react-navigation'
  import Swipeout from 'react-native-swipeout'
@@ -32,13 +33,15 @@ const { height, width } = Dimensions.get('window')
   state => ({
     shopcar: state.get('shopcar'),
     address: state.get('address').get('getDefault'),
+    feeInfo: state.get('fee'),
   }),
   dispatch => ({
     actions: bindActionCreators({
       ...shopCarActions,
       ...addressActions,
       ...infoActions,
-      ...orderActions
+      ...orderActions,
+      ...feeActions
     }, dispatch)
   })
 )
@@ -54,14 +57,14 @@ export default class ShoppingCar extends React.PureComponent {
     }
   }
 
-  // componentDidMount() {
-  //   this.props.actions.addressDefaultRequested()
-  // }
+  componentDidMount() {
+    // this.props.actions.fetchFeeIntroRequested()
+  }
 
   _keyExtractor = (item, index) => index
 
   showDialog() {
-    this.props.actions.feeIntroRequested()
+    // this.props.actions.feeIntroRequested()
     this.popupDialog.show()
   }
 
@@ -76,30 +79,32 @@ export default class ShoppingCar extends React.PureComponent {
     const statusLength = status && status.length
     return (
       <View style={styles.listHeader}>
-        <TouchableOpacity
-          style={styles.chooseAll}
-          >
+        <View style={styles.dealLeft}>
           <TouchableOpacity
-             onPress={this.toggleOneSelected.bind(this, 'all')}
+            style={styles.chooseAll}
             >
-            <View
-              style={styles.clickArea}
+            <TouchableOpacity
+               onPress={this.toggleOneSelected.bind(this, 'all')}
               >
-              {
-                (dataLength && statusLength && dataLength === statusLength) ?
-                <Icon style={styles.icon} name="ios-checkmark-circle" size={30} color="#5dbb80"  backgroundColor="#3b5998"/>
-                :
-                <Icon style={styles.icon} name="ios-radio-button-off-outline" size={30} color="#9a9a9a" backgroundColor="#3b5998"/>
-              }
-            </View>
+              <View
+                style={styles.clickArea}
+                >
+                {
+                  (dataLength && statusLength && dataLength === statusLength) ?
+                  <Icon style={styles.icon} name="ios-checkmark-circle" size={30} color="#5dbb80"  backgroundColor="#3b5998"/>
+                  :
+                  <Icon style={styles.icon} name="ios-radio-button-off-outline" size={30} color="#9a9a9a" backgroundColor="#3b5998"/>
+                }
+              </View>
+            </TouchableOpacity>
           </TouchableOpacity>
-        </TouchableOpacity>
         <Text>全选</Text>
+        </View>
         <TouchableOpacity
-          style={styles.chooseAll}
+          style={styles.removeShopCar}
           onPress={this.deleteOne.bind(this, 'all')}
           >
-            <Text>清空购物车</Text>
+            <Text style={styles.changeAddress}>清空购物车</Text>
         </TouchableOpacity>
       </View>
     )
@@ -135,6 +140,10 @@ export default class ShoppingCar extends React.PureComponent {
   _confirmNumber = () => {
     const { text, item } = this.state
     this.props.actions.addLotsGoodsRequested({ goodsid: item.id, goodsnum: text})
+    this.popupDialogGood.dismiss()
+  }
+
+  _cancelNumber = () => {
     this.popupDialogGood.dismiss()
   }
 
@@ -207,14 +216,15 @@ export default class ShoppingCar extends React.PureComponent {
             </Text>
           </View>
           <View style={styles.operatorArea}>
+
+            {/* <Icon onPress={this._minusGoods} name="ios-remove-circle-outline" size={24} color="#fa4e4c" /> */}
+            <Text style={styles.addNumber}>数量:&nbsp;{item.goodsnum}</Text>
+            {/* <Icon onPress={this._addGoods} name="ios-add-circle" size={24} color="#5dbb80" /> */}
             <TouchableOpacity
               onPress={this._showNumberInput.bind(this, item)}
               >
-              <Text>输入数量</Text>
+              <Text style={styles.changeAddress}>输入数量</Text>
             </TouchableOpacity>
-            <Icon onPress={this._minusGoods} name="ios-remove-circle-outline" size={24} color="#fa4e4c" />
-            <Text style={styles.addNumber}>{item.goodsnum}</Text>
-            <Icon onPress={this._addGoods} name="ios-add-circle" size={24} color="#5dbb80" />
           </View>
         </View>
       </SwipeAction>
@@ -229,13 +239,16 @@ export default class ShoppingCar extends React.PureComponent {
   }
 
   generateOrder = () => {
-    this.props.actions.generateOrderRequested()
+    console.warn('to confirm order detail')
+    // this.props.actions.generateOrderRequested()
+    const { navigation } = this.props
+    navigation.navigate('OrderConfirm', { from: 'ShoppingCar' })
   }
 
   render() {
     console.log('scrollEnabled...', this.state.scrollEnabled)
     console.log('flag...', this.state.flag)
-    const { shopcar, address } = this.props
+    const { shopcar, address, feeInfo } = this.props
     const data = shopcar.get('data')
     const error = shopcar.get('error')
     const loaded = shopcar.get('loaded')
@@ -246,7 +259,12 @@ export default class ShoppingCar extends React.PureComponent {
     const dataJs = data && data.toJS()
     const addressData = address && address.get('data')
     const addressInfo = addressData && `${addressData.get('city')} ${addressData.get('urbanarea')} ${addressData.get('detailedaddress')}`
-    console.warn('address ==>', address);
+    // console.warn('address ==>', address);
+    const dataLength = dataJs && dataJs.length
+    const status = dataJs && dataJs.filter(x => x.checked === '1')
+    const statusLength = status && status.length
+
+    const feeIntro = feeInfo.get('data') && feeInfo.get('data').get('data')
     return (
     <View style={styles.wrap}>
       <ScrollView
@@ -257,9 +275,16 @@ export default class ShoppingCar extends React.PureComponent {
         // scrollEnabled={false}
         style={styles.scrollView}>
         <View style={styles.address}>
-          <Icon style={styles.icon} name="ios-locate-outline" size={22} color="#959595" />
-        <Text style={styles.addressInfo}>{stringCut(addressInfo, 20)}</Text>
-          <Button style={styles.btn} onPress={this._changeAddress} title="更换地址" />
+          <View style={styles.addressLeft}>
+            <Icon style={styles.icon} name="ios-locate-outline" size={22} color="#959595" />
+            <Text style={styles.addressInfo}>{stringCut(addressInfo, 20)}</Text>
+          </View>
+          <TouchableOpacity
+            onPress={this._changeAddress}
+            style={styles.btn}
+            >
+            <Text style={styles.changeAddress}>更换地址</Text>
+          </TouchableOpacity>
         </View>
         <FlatList
           style={styles.list}
@@ -317,9 +342,14 @@ export default class ShoppingCar extends React.PureComponent {
           <View style={styles.listHeader}>
             <TouchableOpacity
               style={styles.chooseAll}
+              onPress={this.toggleOneSelected.bind(this, 'all')}
               >
-                <Icon style={styles.icon} name="ios-checkmark-circle-outline" size={22} color="#5dbb80" />
-              {false && <Icon style={styles.icon} name="ios-radio-button-off-outline" size={22} color="#5dbb80" />}
+                {
+                  (dataLength && statusLength && dataLength === statusLength) ?
+                  <Icon style={styles.icon} name="ios-checkmark-circle-outline" size={22} color="#5dbb80"  backgroundColor="#3b5998"/>
+                  :
+                  <Icon style={styles.icon} name="ios-radio-button-off-outline" size={22} color="#9a9a9a" backgroundColor="#3b5998"/>
+                }
             </TouchableOpacity>
             <Text>全选</Text>
           </View>
@@ -345,7 +375,7 @@ export default class ShoppingCar extends React.PureComponent {
           // dialogAnimation={SlideAnimation}
         >
           <View>
-            <Text>Hello</Text>
+            <Text style={styles.feeIntro}>{feeIntro}</Text>
           </View>
         </PopupDialog>
       </View>
@@ -362,25 +392,33 @@ export default class ShoppingCar extends React.PureComponent {
           // dialogAnimation={SlideAnimation}
         >
           <View>
-            <TextInput
-              ref={(input) => this.input = input}
-              style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-              onChangeText={(text) => this.setState({text})}
-              value={this.state.text}
-              keyboardType='numeric'
-            />
-            <TouchableOpacity
-              onPress={this._confirmNumber.bind(this)}
-              >
-              <View>
-                <Text>确认</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View>
-                <Text>取消</Text>
-              </View>
-            </TouchableOpacity>
+            <View>
+              <TextInput
+                ref={(input) => this.input = input}
+                style={styles.numberInput}
+                onChangeText={(text) => this.setState({text})}
+                value={this.state.text}
+                keyboardType='numeric'
+              />
+            </View>
+            <View style={styles.operatorPlace}>
+              <TouchableOpacity
+                style={styles.operatorPlaceCell}
+                onPress={this._cancelNumber.bind(this)}
+                >
+                <View>
+                  <Text style={[styles.operatorPlaceCellText, styles.cancelNumber]}>取消</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={this._confirmNumber.bind(this)}
+                style={styles.operatorPlaceCell}
+                >
+                <View>
+                  <Text style={[styles.operatorPlaceCellText, styles.confirmNumber]}>确认</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </PopupDialog>
       </View>
@@ -419,6 +457,7 @@ const styles = StyleSheet.create({
 
   address: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#fff',
     paddingTop: 10,
@@ -426,16 +465,47 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 
+  addressLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  changeAddress: {
+    color: '#61b981',
+    borderColor: '#61b981',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    paddingBottom:4,
+    paddingTop:4,
+    paddingLeft:10,
+    paddingRight:10,
+    borderRadius: 2
+  },
+
   listHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingTop: 10,
     paddingBottom: 10,
+    paddingRight: 20,
+    borderTopColor: '#f3f3f3',
+    borderStyle: 'solid',
+    borderTopWidth: 1
+  },
+
+  dealLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   chooseAll: {
     // paddingLeft: 20,
     paddingRight: 20
+  },
+
+  removeShopCar: {
+    marginLeft: 20,
   },
 
   addressInfo: {
@@ -449,7 +519,9 @@ const styles = StyleSheet.create({
 
   btn: {
     width: 100,
-    height: 40
+    height: 40,
+    alignItems:'center',
+    justifyContent: 'center',
   },
 
   rightItemWrap: {
@@ -479,7 +551,7 @@ const styles = StyleSheet.create({
   },
 
   rightItemTitle: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#3c3c3c',
     fontWeight: '800',
     paddingBottom: 6,
@@ -487,7 +559,7 @@ const styles = StyleSheet.create({
 
   rightItemDesc: {
     color: '#9a9a9a',
-    fontSize: 12,
+    fontSize: 10,
     paddingBottom: 5,
   },
 
@@ -573,6 +645,7 @@ const styles = StyleSheet.create({
   leftBar: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingLeft: 10
   },
 
   payNum: {
@@ -620,4 +693,50 @@ const styles = StyleSheet.create({
     height: 46,
     // backgroundColor: 'red',
   },
+
+  numberInput:{
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 10,
+    marginLeft:10,
+    marginRight:10,
+    borderRadius: 4,
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+
+  operatorPlace: {
+    marginTop: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+
+  operatorPlaceCell: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  operatorPlaceCellText: {
+    textAlign: 'center',
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingLeft: 10,
+    paddingRight: 10,
+    // borderStyle: 'solid',
+    // borderWidth: 1,
+  },
+  cancelNumber: {
+    color: '#f5222d',
+  },
+  confirmNumber: {
+    color: '#61b981'
+  },
+  feeIntro: {
+    fontSize: 11,
+    color: '#9a9a9a',
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10,
+    lineHeight: 30,
+  }
 })

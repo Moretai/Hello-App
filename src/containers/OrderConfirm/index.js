@@ -22,11 +22,15 @@ import OneDayTimePicker from '../../components/OneDayTimePicker'
 import * as actions from '../../actions/order'
 import { withNavigation, NavigationActions } from 'react-navigation'
 
+import letterBgImg from '../../resources/images/letter-3x.png'
+
 const { height, width } = Dimensions.get('window')
 
 @connect(
   state => ({
-    // list: state.get('order').get('list')
+    address: state.get('address').get('getDefault'),
+    shopcar: state.get('shopcar').get('data'),
+    fee: state.get('shopcar').get('fee'),
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -70,10 +74,31 @@ export default class OrderConfirm extends React.PureComponent {
   //   )
   // }
   navGoodsList = () => {
-    console.warn('navGoodsList');
+    const { navigation } = this.props
+    navigation.navigate('GoodsList')
   }
 
   render() {
+    const { address, shopcar, fee } = this.props
+
+    const addressInfo = address && address.get('data')
+    const city = addressInfo && addressInfo.get('city')
+    const consignee = addressInfo && addressInfo.get('consignee')
+    const detailedaddress = addressInfo && addressInfo.get('detailedaddress')
+    const urbanarea = addressInfo && addressInfo.get('urbanarea')
+    const telephone = addressInfo && addressInfo.get('telephone')
+    const distance = addressInfo && addressInfo.get('distance')
+
+    const shopcarJs = shopcar && shopcar.toJS()
+    const imgs = shopcarJs && shopcarJs.filter(x => x.checked === '1')
+    console.warn('imgs-->', imgs)
+    const sumTotal = imgs && imgs.reduce((sum, x) => {
+      return sum += Number(x.goodsnum)
+    }, 0)
+
+    const feeInfo = fee.get('data')
+    const feeData = feeInfo && feeInfo.size && feeInfo.toJS()
+
     return (
       <View style={styles.wrap}>
         <ScrollView
@@ -81,13 +106,18 @@ export default class OrderConfirm extends React.PureComponent {
           showsVerticalScrollIndicator={false}
           >
           <View style={styles.address}>
-            <Icon style={styles.icon} name="ios-locate-outline" size={22} color="#959595" />
+            <Icon style={styles.icon} name="ios-locate-outline" size={22} color="#5dbb80" />
             <View style={styles.rightLoca}>
-              <Text>上海 &nbsp; 上海市&nbsp; 上海市&nbsp; 上海市</Text>
+              <Text style={styles.fontSizeSmal}>{city}&nbsp;{urbanarea}&nbsp;{detailedaddress}</Text>
               <View style={styles.oneLine}>
-                <Text style={styles.name}>邰相贤</Text>
-                <Text>15252739492</Text>
+                <Text style={[styles.name, styles.fontSizeSmal]}>{consignee}</Text>
+                <Text style={[styles.name, styles.fontSizeSmal]}>{telephone}</Text>
+                <Text style={styles.fontSizeSmal}>距离送货中心:&nbsp;{distance}公里</Text>
               </View>
+              <Image
+                source={require('../../resources/images/letter-3x.png')}
+                style={{width: width - 40, height: 2, marginTop: 10}}
+              />
             </View>
           </View>
           <OneYearTimePicker />
@@ -99,14 +129,14 @@ export default class OrderConfirm extends React.PureComponent {
               style={styles.listWrap}
               >
               <FlatList
-                data={[{key: 'a'}, {key: 'b'},{key: 'c'},{key: 'd'},{key: 'e'},{key: 'f'},{key: 'g'}]}
+                data={imgs}
                 style={styles.list}
                 keyExtractor={this._keyExtractor}
                 onPress={() => AlertIOS.alert('clicked')}
                 renderItem={({item}) => <Image
                   style={styles.img}
-                  source={require('../../resources/images/avatar.jpg')}
-                  style={{width: 40, height: 40, borderRadius: 20}}
+                  source={{ uri: item.imgpath }}
+                  style={styles.imgWrap}
                  />}
                 horizontal={true}
                 // ListFooterComponent={this.listFooter}
@@ -117,7 +147,7 @@ export default class OrderConfirm extends React.PureComponent {
               style={styles.rightPart}
               onPress={this.navGoodsList}
               >
-              <Text>共计14件</Text>
+              <Text>共计{sumTotal}件</Text>
               <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
             </TouchableOpacity>
           </View>
@@ -132,33 +162,42 @@ export default class OrderConfirm extends React.PureComponent {
               }
             </TouchableOpacity>
           </View> */}
-            {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map(item => (
-              <View key={item} style={styles.cell}>
-                <View style={styles.cellLeft}>
-                  <Image
-                    source={require('../../resources/images/avatar.jpg')}
-                    style={styles.img}
-                  />
-                  <Text style={styles.cellTitle}>局乐宝</Text>
-                </View>
-                <View style={styles.cellRight}>
-                  <Text style={styles.price}>价格¥5.9</Text>
-                  <Text style={styles.number}>1袋&nbsp;X1</Text>
-                </View>
-              </View>
-            ))}
-          <View style={styles.goodsList}>
+          {/* <View style={styles.goodsList}>
             <Text style={styles.goodsTitle}>订单号</Text>
             <TouchableOpacity onPress={this._toggleShow} style={styles.goodsRight}>
               <Text style={styles.goodsTotalNum}>DDTYUIBNMGN</Text>
             </TouchableOpacity>
+          </View> */}
+        <View style={styles.btmWrap}>
+          <View style={styles.btmItem}>
+            <Text style={styles.leftText}>商品总价</Text><Text style={styles.rightText}>¥{feeData && feeData.totalfee}</Text>
           </View>
+          <View style={styles.btmItem}>
+            <View style={styles.leftTextTwo}>
+              <Text style={styles.leftText}>运费</Text>
+              {/* <TouchableOpacity
+                onPress={this.showDialog.bind(this)}
+                style={styles.transferFeeTip}
+
+                >
+                  <Icon style={styles.icon} name="ios-information-circle-outline" size={18} color="#5dbb80" />
+                  <Text style={styles.feeExpress}>计费说明</Text>
+              </TouchableOpacity> */}
+            </View><Text style={styles.rightText}>¥{feeData && feeData.freightfee}</Text>
+          </View>
+          <View style={styles.btmItem}>
+            <Text style={styles.leftText}>运费起步价折扣</Text><Text style={styles.rightText}>{feeData && feeData.discount}</Text>
+          </View>
+          <View style={[styles.btmItem, styles.btmItemTwo]}>
+            <Text style={styles.leftText}>合计:</Text><Text style={[styles.rightText, styles.rightTextTwo]}>¥{feeData && feeData.finalfee}</Text>
+          </View>
+        </View>
 
         </ScrollView>
         <View style={styles.btmBar}>
           <View style={styles.leftBar}>
             <Text style={styles.payNum}>付款</Text>
-            <Text style={styles.payMoney}>¥127</Text>
+            <Text style={styles.payMoney}>¥{feeData && feeData.finalfee}</Text>
           </View>
           <TouchableOpacity
             style={styles.rightBar}
@@ -186,11 +225,17 @@ const styles = StyleSheet.create({
   oneLineWrap: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 10,
+    // paddingTop: 16,
+    backgroundColor: '#fff'
   },
 
   listWrap: {
     width: width - 90,
+    paddingBottom: 16,
+    paddingLeft: 10,
+    paddingTop: 16,
     overflow: 'hidden',
   },
 
@@ -209,10 +254,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 10,
+    marginBottom: 10
   },
 
   rightLoca: {
-    paddingLeft: 10
+    paddingLeft: 10,
+    // fontSize:10
   },
 
   oneLine: {
@@ -291,6 +338,7 @@ const styles = StyleSheet.create({
   btmBar: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#fff',
     justifyContent: 'space-between',
     // paddingTop: 10,
     // paddingBottom: 10
@@ -367,5 +415,43 @@ const styles = StyleSheet.create({
     paddingLeft: 10
   },
 
+  fontSizeSmal: {
+    fontSize: 12
+  },
 
+  imgWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10
+  },
+  btmWrap: {
+    paddingBottom: 100,
+  },
+
+  btmItem: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingRight: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#f3f3f3',
+    borderStyle: 'solid',
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+
+  btmItemTwo: {
+    justifyContent: 'flex-end',
+  },
+
+  leftText: {
+    color: '#3c3c3c',
+    paddingLeft: 10
+  },
+
+  leftTextTwo: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
 })

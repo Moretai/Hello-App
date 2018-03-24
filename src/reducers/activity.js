@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions'
 import Immutable from 'immutable'
-import * as actions from '../actions/carousel'
+import * as actions from '../actions/activity'
 
 const initialState = Immutable.fromJS({
   data: null,
@@ -10,15 +10,15 @@ const initialState = Immutable.fromJS({
 })
 
 export default handleActions({
-  [actions.carouselRequested](state, action) {
+  [actions.activityRequested](state, action) {
     return state.set('loading', true)
   },
-  [actions.carouselSucceed](state, action) {
+  [actions.activitySucceed](state, action) {
     return state.set('loading', false)
     .set('loaded', true)
     .set('data', Immutable.fromJS(action.payload))
   },
-  [actions.carouselFailed](state, action) {
+  [actions.activityFailed](state, action) {
     return state.set('loading', false)
     .set('loaded', true)
     .set('data', Immutable.fromJS(action.payload))

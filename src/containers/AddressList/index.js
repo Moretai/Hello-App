@@ -13,6 +13,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withNavigation, NavigationActions } from 'react-navigation'
 import { Toast } from 'antd-mobile'
+import { stringCut } from '../../utils/tools'
 import Icon from 'react-native-vector-icons/Ionicons'
 import * as addressActions from '../../actions/address'
 
@@ -43,7 +44,7 @@ export default class AddressList extends React.PureComponent {
         title="返回"
         // onPress={() => navigation.dispatch(NavigationActions.navigate({routeName: 'User'}))}
         onPress={() => navigation.dispatch(NavigationActions.navigate(
-          {routeName: `${navigation.state.params.from}`}
+          {routeName: (navigation.state && navigation.state.params && navigation.state.params.from) || 'ShoppingCar' }
         ))}
       />
     ),
@@ -103,7 +104,8 @@ export default class AddressList extends React.PureComponent {
               <View>
                 <Text style={styles.text}>{item.consignee}</Text>
                 <Text style={styles.text}>{item.telephone}</Text>
-                <Text style={styles.text}><Text style={styles.locationType}>[{item.city}]</Text>{item.urbanarea}&nbsp; {item.detailedaddress}</Text>
+                <Text style={styles.text}><Text style={styles.locationType}>[{item.city}]</Text>{stringCut(item.urbanarea, 8)}</Text>
+                <Text style={styles.text}>{stringCut(item.detailedaddress, 20)}</Text>
               </View>
             </View>
           </View>

@@ -8,7 +8,8 @@ import { getLocalToken } from './tools'
 
 export const fetchJxy = async(method = 'GET', endPoint = '/hello', params = {}, customeHeaders = {}) => {
   // let url = 'http://localhost:8888/api' + endPoint
-  let url = 'http://120.78.166.233:8080/api' + endPoint
+  // let url = 'http://120.78.166.233:8080/api' + endPoint
+  let url = 'http://192.168.0.105:8080/api' + endPoint
   // let url = 'http://192.168.0.107:8080/api' + endPoint
   const token = await getLocalToken('token') || null
   console.warn('token is ==>', token);
@@ -38,7 +39,7 @@ export const fetchJxy = async(method = 'GET', endPoint = '/hello', params = {}, 
   }
 
   return fetch(url, options).then((res) => {
-    console.warn('res is=======>', res)
+    // console.warn('res is=======>', res)
     if (!res.ok) {
       return res.json().then(e => Promise.reject({ message: e.msg }))
     }
@@ -179,3 +180,8 @@ export const generateOneOrder = (params) => fetchJxy('POST', '/insertorder', par
 
 // 获取订单详情
 export const fetchOneOrderDetail = (params) => fetchJxy('GET', `/selectorderdetailbyorderid/${params.id}`)
+
+// 轮播详细页
+export const activityDetail = (params) => fetchJxy('GET', `/selectactivitydetailbyid/${params.id}`)
+
+export const feeIntro = () => fetchJxy('GET', '/selectPriceDescription')

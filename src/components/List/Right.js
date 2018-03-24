@@ -38,16 +38,6 @@ class RightItem extends React.PureComponent {
     this.props.actions.searchAddGoodsToshopCarRequested({ goodsid: item.id, goodsnum: 1 })
   }
 
-  // _minusGoods = () => {
-  //   AlertIOS.alert('minus ok')
-  // }
-
-  async componentDidMount() {
-    // await AsyncStorage.setItem('token', '10086')
-    // const result = await AsyncStorage.getItem('token')
-    // AlertIOS.alert(JSON.stringify(result))
-  }
-
   _navToDetail = () => {
     const { navigation } = this.props
     navigation.navigate('Chat', { user: 'LIST ONE'})
@@ -61,7 +51,7 @@ class RightItem extends React.PureComponent {
           <TouchableOpacity onPress={this._navToDetail}>
             <Image
               source={{ uri: item.imgpath }}
-              style={{ width: 90, height: 90 }}
+              style={{ width: 70, height: 70 }}
             />
           </TouchableOpacity>
         </View>
@@ -130,7 +120,7 @@ export default class Right extends React.PureComponent {
   }
 
   _renderItem = ({item}) => {
-    console.warn('_renderItem item is ===>', item);
+    // console.warn('_renderItem item is ===>', item);
     return(
     // <TouchableHighlight
     //   onPress={this._onPressItem.bind(this, item)}
@@ -314,7 +304,7 @@ const styles = StyleSheet.create({
   },
 
   rightItemTitle: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#3c3c3c',
     fontWeight: '800',
     paddingBottom: 6,
@@ -322,7 +312,7 @@ const styles = StyleSheet.create({
 
   rightItemDesc: {
     color: '#9a9a9a',
-    fontSize: 12,
+    fontSize: 10,
     paddingBottom: 5,
   },
 
@@ -336,13 +326,14 @@ const styles = StyleSheet.create({
 
   priceDelete: {
     color: '#9a9a9a',
-    paddingTop: 10,
+    paddingTop: 3,
     paddingBottom: 10,
-    paddingLeft: 14
+    paddingLeft: 14,
+    textDecorationLine: 'line-through',
   },
 
   number: {
-    fontSize: 22,
+    fontSize: 16,
     marginLeft: 100,
   },
 
@@ -375,7 +366,7 @@ const styles = StyleSheet.create({
 
   flatWrap: {
     flex: 1,
-    paddingBottom: 60,
+    paddingBottom: 0,
     // backgroundColor: 'red'
     // minHeight: 200
   },

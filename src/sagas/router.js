@@ -4,6 +4,7 @@ import * as routerActions from '../actions/router'
 import * as shopCarActions from '../actions/shopcar'
 import * as addressActions from '../actions/address'
 import * as searchActions from '../actions/search'
+import * as feeActions from '../actions/fee'
 
 // function locationChange() {
 //   window.scroll(0, 0)
@@ -15,10 +16,11 @@ function* locationInit(action) {
 
 function* locationChange(action) {
   const { routeName } = action
-  console.warn('routeName==>', routeName);
+  // console.warn('routeName==>', routeName);
   if (routeName === 'ShoppingCar') {
     yield put(shopCarActions.shopCarRequested())
     yield put(addressActions.addressDefaultRequested())
+    yield put(feeActions.fetchFeeIntroRequested())
   }
 
   if (routeName === 'AddressList') {

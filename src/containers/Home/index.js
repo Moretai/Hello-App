@@ -43,19 +43,19 @@ export default class Home extends React.PureComponent {
       {
         title: '111111111111111111111111111111',
         id: '001',
-        src: 'http://img3.mukewang.com/szimg/59b8a486000107fb05400300.jpg',
+        imgpath: 'http://img3.mukewang.com/szimg/59b8a486000107fb05400300.jpg',
         path: '/intro'
       },
       {
         title: '222222222222222222222222222222',
         id: '002',
-        src: 'http://img2.mukewang.com/szimg/5909a1250001197e05400300.jpg',
+        imgpath: 'http://img2.mukewang.com/szimg/5909a1250001197e05400300.jpg',
         path: '/intro'
       },
       {
         title: '333333333333333333333333333333',
         id: '003',
-        src: 'http://img3.mukewang.com/szimg/59eeb17200013f8605400300.jpg',
+        imgpath: 'http://img3.mukewang.com/szimg/59eeb17200013f8605400300.jpg',
         path: '/intro'
       }
     ]
@@ -63,12 +63,14 @@ export default class Home extends React.PureComponent {
 }
 
 componentDidMount() {
+  console.warn('HOME .....componentDidMount');
   this.props.actions.carouselRequested()
 }
 
   goBannerDetail(id) {
+    if(!id) return
     const { navigation } = this.props
-    navigation.navigate('Detail', { id })
+    navigation.navigate('Detail', { id, title: '' })
   }
 
   _renderItem ({item, index}) {
@@ -76,11 +78,11 @@ componentDidMount() {
       //TODO 这个传query参数
       <TouchableOpacity
         flag={item.id}
-        onPress={this.goBannerDetail.bind(this, item.id)}
+        onPress={this.goBannerDetail.bind(this, item.activityid)}
         >
         <View key={index}>
         <Image
-          source={require('../../resources/images/test.jpg')}
+          source={{ uri: item.imgpath || '../../resources/images/test.jpg'}}
           style={{width: width, height: 150}}
           resizeMode='cover'
          />
@@ -90,11 +92,14 @@ componentDidMount() {
   }
 
   get pagination () {
-      const { entries, activeSlide } = this.state;
+      const { entries, activeSlide } = this.state
+      const { carousel } = this.props
+      const carouselImgs = carousel.get('data') && carousel.get('data').toJS()
+      const length = carouselImgs && carouselImgs.length
       return (
           <Pagination
             style={{height:10}}
-            dotsLength={entries.length}
+            dotsLength={length || 1}
             activeDotIndex={activeSlide}
             containerStyle={{
               // backgroundColor: 'rgba(0, 0, 0, 0.75)',
@@ -124,7 +129,8 @@ componentDidMount() {
   }
 
   render () {
-    const { to, navigation } = this.props
+    const { to, navigation, carousel } = this.props
+    const carouselImgs = carousel.get('data') && carousel.get('data').toJS()
       return (
         <View
           style={styles.wrap}>
@@ -140,18 +146,19 @@ componentDidMount() {
             }}
             onPress={() => (console.log('pressed..in View..'))}
             >
+            {carouselImgs &&
             <Carousel
               autoplay={true}
               loop={true}
               ref={(c) => { this._carousel = c }}
-              data={this.state.entries}
+              data={carouselImgs}
               renderItem={this._renderItem.bind(this)}
               // sliderWidth={sliderWidth}
               sliderWidth={this.state.viewport.width}
               itemWidth={this.state.viewport.width}
               onSnapToItem={(index) => this.setState({ activeSlide: index }) }
               style={{position: 'absolute', zIndex: 10}}
-            />
+            />}
             <View style={styles.pagination}>
               { this.pagination }
             </View>
@@ -168,7 +175,7 @@ const styles = StyleSheet.create({
   wrap: {
     display: 'flex',
     flex:1,
-    backgroundColor: 'pink',
+    backgroundColor: 'transparent',
     // height: 300,
   },
   carouselWrap: {

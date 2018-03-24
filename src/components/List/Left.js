@@ -43,7 +43,7 @@ export default class Left extends React.PureComponent {
 
   _renderItem = ({ item, index }) => {
     const activeIndex = this.state.index
-    console.warn('item====>', item);
+    // console.warn('item====>', item);
     return(
     <TouchableOpacity
       onPress={this._onPressItem.bind(this, item, index)}

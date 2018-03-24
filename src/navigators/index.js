@@ -18,6 +18,7 @@ import SearchList from '../containers/SearchList'
 import OrderList from '../containers/OrderList'
 import Test from '../containers/Test/demoa'
 import OrderConfirm from '../containers/OrderConfirm'
+import GoodsList from '../containers/GoodsList'
 // import Test from '../containers/Test'
 
 const headerConfig = {
@@ -168,7 +169,7 @@ const DetailStack = StackNavigator({
     screen: Detail,
     path: '/',
     navigationOptions: {
-      title: 'Detail',
+      // title: 'Detail',
       ...headerConfig,
       ...addRightToBalance
     }
@@ -187,6 +188,18 @@ const OrderDetailStack = StackNavigator({
   }
 })
 
+// const OrderConfirmStack = StackNavigator({
+//   OrderDetail: {
+//     screen: OrderConfirm,
+//     path: '/',
+//     navigationOptions: {
+//       title: '确认订单',
+//       ...headerConfig,
+//       ...addRightToBalance
+//     }
+//   }
+// })
+
 const TestStack = StackNavigator({
   OrderDetail: {
     screen: Test,
@@ -198,6 +211,19 @@ const TestStack = StackNavigator({
     }
   }
 })
+
+const GoodsListStack = StackNavigator({
+  OrderDetail: {
+    screen: GoodsList,
+    path: '/',
+    navigationOptions: {
+      title: '物品列表',
+      ...headerConfig,
+      ...addRightToBalance
+    }
+  }
+})
+
 
 const Tabs = TabNavigator(
   {
@@ -257,54 +283,54 @@ const Tabs = TabNavigator(
         )
       }
     },
-    Test: {
-      screen: LoginStack,
-      path: '/test',
-      navigationOptions: {
-        tabBarLabel: 'Shop',
-        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
-          <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
-            size={22}
-            style={{ color: tintColor }}
-          />
-        )
-      }
-    },
-    OrderConfirmStack: {
-      screen: OrderConfirmStack,
-      path: '/test',
-      navigationOptions: {
-        tabBarLabel: 'Shop',
-        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
-          <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
-            size={22}
-            style={{ color: tintColor }}
-          />
-        )
-      }
-    },
-    Hello: {
-      screen: TestStack,
-      path: '/test',
-      navigationOptions: {
-        tabBarLabel: 'Shop',
-        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
-          <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
-            size={22}
-            style={{ color: tintColor }}
-          />
-        )
-      }
-    }
+    // Test: {
+    //   screen: LoginStack,
+    //   path: '/test',
+    //   navigationOptions: {
+    //     tabBarLabel: 'Shop',
+    //     tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
+    //       <Ionicons
+    //         name={focused ? 'ios-settings' : 'ios-settings-outline'}
+    //         size={22}
+    //         style={{ color: tintColor }}
+    //       />
+    //     )
+    //   }
+    // },
+    // OrderConfirmStack: {
+    //   screen: OrderConfirmStack,
+    //   path: '/test',
+    //   navigationOptions: {
+    //     tabBarLabel: 'Shop',
+    //     tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
+    //       <Ionicons
+    //         name={focused ? 'ios-settings' : 'ios-settings-outline'}
+    //         size={22}
+    //         style={{ color: tintColor }}
+    //       />
+    //     )
+    //   }
+    // },
+    // Hello: {
+    //   screen: TestStack,
+    //   path: '/test',
+    //   navigationOptions: {
+    //     tabBarLabel: 'Shop',
+    //     tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
+    //       <Ionicons
+    //         name={focused ? 'ios-settings' : 'ios-settings-outline'}
+    //         size={22}
+    //         style={{ color: tintColor }}
+    //       />
+    //     )
+    //   }
+    // }
   },
   {
     tabBarPosition: 'bottom',
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: 'Hello',
+    initialRouteName: 'User',
     tabBarOptions: {
       inactiveBackgroundColor: '#fff',
       activeBackgroundColor: '#fff',
@@ -349,6 +375,8 @@ export const Navigator = StackNavigator(
     AddNewAddress: { screen: AddNewAddressStack },
     SearchList: { screen: SearchListStack },
     OrderList: { screen: OrderListStack },
+    OrderConfirm: { screen: OrderConfirmStack },
+    GoodsList: { screen: GoodsListStack },
   },
   {
     headerMode: 'none',
