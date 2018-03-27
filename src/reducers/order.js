@@ -4,10 +4,16 @@ import * as actions from '../actions/order'
 
 const initialState = Immutable.fromJS({
   list: {
+    data: null,
     loading: false,
     loaded: false,
     error: null,
-    data: null,
+    showError: false,
+    loadMoreloading: false,
+    loadMoreloaded: false,
+    loadMoreError: null,
+    loadMoreShowError: false,
+    page: 1
   },
   detail: {
     loading: false,
@@ -41,6 +47,27 @@ export default handleActions({
     .set('loaded', true)
     .set('data', null)
     .set('error', action.payload))
+  },
+  [actions.loadMoreOrderListRequested](state, action) {
+    return state.update('list', v => v
+    .set('loadMoreloading', true)
+    .set('loadMoreloaded', false)
+    .set('loadMoreShowError', false))
+  },
+  [actions.loadMorOrderListSucceed](state, action) {
+    return state.update('list', v => v
+    .set('loadMoreloading', false)
+    .set('loadMoreloaded', true)
+    .update('data', v => v.mergeDeep(Immutable.fromJS(action.payload)))
+    .set('loadMoreError', null)
+    .set('loadMoreShowError', false))
+  },
+  [actions.loadMoreOrderListFailed](state, action) {
+    return state.update('list', v => v
+    .set('loadMoreloading', false)
+    .set('loadMoreloaded', true)
+    .set('error', action.payload)
+    .set('loadMoreShowError', true))
   },
   [actions.generateOrderRequested](state, action) {
     return state.update('generate', v => v

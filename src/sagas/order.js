@@ -43,6 +43,17 @@ function* getOneOrder(action) {
   }
 }
 
+function* loadMoreOrderList(action) {
+  const { type, page } = action.payload
+  try {
+    const result = yield call(api.fetchListOrders, action.payload)
+    console.warn('-------->', result)
+    yield put(actions.loadMorOrderListSucceed(result))
+  } catch (e) {
+    yield put(actions.loadMoreOrderListFailed(e.message))
+  }
+}
+
 
 export default function* orderSaga() {
   yield takeEvery(String(actions.fetchListOrdersRequested), fetchListOrders)
@@ -52,6 +63,8 @@ export default function* orderSaga() {
   yield takeEvery(String(actions.generateOrderSucceed), generateOrderSucceed)
   yield takeEvery(String(actions.generateOrderFailed), generateOrderFailed)
   yield takeEvery(String(actions.getOneOrderRequested), getOneOrder)
+
+  yield fork(takeEvery, String(actions.loadMoreOrderListRequested), loadMoreOrderList)
 }
 
 // export const getOneOrderRequested = createAction('order/GET_ONE_ORDER_REQUESTED')

@@ -20,5 +20,8 @@ export default handleActions({
   },
   [actions.updateCountDownSeconds](state, action) {
     return state.set('countDownSeconds', action.payload)
+  },
+  [actions.stopVcodeCountDown](state, action) {
+    return state.set('countDownSeconds', 0)
   }
 }, initialState)

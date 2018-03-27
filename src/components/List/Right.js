@@ -120,13 +120,7 @@ export default class Right extends React.PureComponent {
   }
 
   _renderItem = ({item}) => {
-    // console.warn('_renderItem item is ===>', item);
     return(
-    // <TouchableHighlight
-    //   onPress={this._onPressItem.bind(this, item)}
-    // >
-    //   <Text style={styles.text}>{item.text}</Text>
-    // </TouchableHighlight>
     <RightItem item={item} />
   )}
 
@@ -135,18 +129,11 @@ export default class Right extends React.PureComponent {
     const total = list.get('data').get('count')
     const data = list.get('data').get('data')
     const length = data && data.size
-    // console.warn('length', length)
-    // console.warn('total', total)
     return length < Number(total)
   }
 
   _endReach = ({ distanceFromEnd }) => {
-    // console.warn('_endReach=====>distanceFromEnd', distanceFromEnd)
-    // if( distanceFromEnd > 50 || distanceFromEnd < 0) {
-    //   return
-    // }
     const { list } = this.props
-    // const page = list.get('data') && list.get('data').get('page')
     const typeId = list.get('id')
     const pageNum = list.get('page')
     const loadMoreLoading = list.get('loadMoreloading')
@@ -157,10 +144,6 @@ export default class Right extends React.PureComponent {
 
     this.props.actions.loadMoreListRequested({ typeId, page: pageNum + 1, limit: 10 })
   }
-
-  // _scrollToEnd = () => {
-  //   console.log('RIGHT _scrollToEnd >>>')
-  // }
 
   _renderHeader = () => (
     <View>
@@ -216,17 +199,6 @@ export default class Right extends React.PureComponent {
     const error = list.get('error')
     const contentIm = data && data.get('data')
     const content = contentIm && contentIm.toJS()
-    // const page = list.get('data').get('page')
-    // console.log('page...', page)
-    // const shopcarListData = shopcarList && shopcarList.get('data')
-    // const shopcarLoading = shopcarList && shopcarList.get('loading')
-    // const shopcarError = shopcarList && shopcarList.get('error')
-    // const shopcarData = shopcarListData && shopcarListData.get('lists')
-    // const shopcarDataJS =  shopcarData && shopcarData.toJS()
-    // const DataJS =  data && data.get('data') && data.get('data').toJS()
-    // const mergerData = DataJS && mergeArray(DataJS, shopcarDataJS)
-    // console.log('mergerData..', mergerData)
-    // if (error || shopcarError) {
     if (error) {
       return (
         <View>
@@ -234,7 +206,6 @@ export default class Right extends React.PureComponent {
         </View>
       )
     }
-    // if (loading || shopcarLoading) {
     if (loading) {
       return (
         <View>
@@ -245,15 +216,10 @@ export default class Right extends React.PureComponent {
     return (
       <View style={styles.flatWrap}>
         <FlatList
-          // data={mergerData && mergerData}
-          // data={data.get('data')}
-          // data={mockData}
           data={content}
-          // extraData={this.state}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           onEndReached={this._endReach}
-          // onEndReachedThreshold={0.1}
           onMomentumScrollBegin={()=>{
               // AlertIOS.alert('onMomentumScrollStart...@@@@@')
           }}

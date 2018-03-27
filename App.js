@@ -1,6 +1,10 @@
 import React from 'react'
 import { Provider, connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {
+  View,
+  Text
+} from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import AppWithNavigationState from './src/navigators'
 import configure from './src/store'
@@ -20,16 +24,42 @@ console.ignoredYellowBox = ['Remote debugger']
   })
 )
 class Conatienr extends React.PureComponent {
+
+  constructor() {
+      super()
+      this.state = {
+        storeCreated: false,
+        storeRehydrated: false,
+      }
+    }
+
   componentDidMount() {
-    this.props.actions.locationInit()
-    console.log('App componentDidMount...')
-  }
+      configure (
+        x => this.setState({ storeCreated: true })
+      )
+      // configure(
+      //   (err,restoredState) => console.warn('restoredState',restoredState)
+      // )
+      this.props.actions.locationInit()
+    }
   render() {
+    if (!this.state.storeCreated) {
+        return(
+          <View
+          style={{backgroundColor: 'pink'}}
+            >
+            <Text
+              style={{fontSize: 40}}
+              >componentDidMountcomponentDidMountcomponentDidMountcomponentDidMountcomponentDidMount</Text>
+          </View>
+        )
+      }
     return (
       <AppWithNavigationState />
     )
   }
 }
+
 export default class App extends React.PureComponent {
   render() {
     return (

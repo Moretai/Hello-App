@@ -10,6 +10,7 @@ import {
   AlertIOS,
   AsyncStorage
 } from 'react-native'
+import Immutable from 'immutable'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withNavigation, NavigationActions } from 'react-navigation'
@@ -93,6 +94,8 @@ export default class Search extends React.PureComponent {
   render() {
     const { hotSearch } = this.props
     const data = hotSearch.get('data')
+    console.warn('data.....', data)
+    console.warn('data instanceof Immutable.Map.....', data instanceof Immutable.Map)
     return (
       <View style={styles.wrap}>
         <View style={styles.searchWrap}>
@@ -130,6 +133,7 @@ export default class Search extends React.PureComponent {
             <Text style={styles.mainTitle}>热门搜索</Text>
           </View>
           <View style={styles.listWrap}>
+            {/* {data && data instanceof Immutable.Map && data.toJS().map((item, index) => ( */}
             {data && data.toJS().map((item, index) => (
               <TouchableOpacity
                 onPress={this._search.bind(this, item.searchname)}

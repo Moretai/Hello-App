@@ -1,10 +1,12 @@
 import { eventChannel, END, delay } from 'redux-saga'
 import { call, put, fork, take, takeEvery } from 'redux-saga/effects'
+import { reset, destroy } from 'redux-form/es/immutable'
 import { Action } from 'redux-actions'
 import { setLocalToken, checkTokenExist } from '../utils/tools'
 import { Toast } from 'antd-mobile'
 import * as api from '../utils/api'
 import * as actions from '../actions/login'
+import * as vcodeActions from '../actions/vcode'
 
 export function* checkHasLogined() {
   const result = yield checkTokenExist()
@@ -16,8 +18,6 @@ export function* checkHasLogined() {
 
 function* login(action) {
   try {
-    console.warn('in saga login--->=====>', action.payload);
-    // const result = yield call(api.login, action.payload)
     const result = yield call(api.login, action.payload)
     yield put(actions.loginSucceed(result))
   } catch (e) {
@@ -26,8 +26,9 @@ function* login(action) {
 }
 
 function* loginSucceed(action) {
-  console.warn('result ---->', action);
   const { token, name } = action.payload
+  yield put(vcodeActions.stopVcodeCountDown())
+  yield put(destroy('loginForm'))
   yield setLocalToken('token', token)
   yield put({type: "Navigation/NAVIGATE", routeName: "Home"})
 }

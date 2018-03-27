@@ -15,6 +15,7 @@ function* pay(action) {
     console.warn('result', result);
     yield put(actions.paySucceed(result))
   } catch (e) {
+    console.warn('payFailed..', e);
     yield put(actions.payFailed(e.message))
   }
 }

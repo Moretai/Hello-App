@@ -13,6 +13,7 @@ function countdownChannel(seconds) {
         emitter(seconds)
       } else {
         emitter(END)
+        clearInterval(interval)
       }
     }, 1000)
 
@@ -20,6 +21,13 @@ function countdownChannel(seconds) {
       clearInterval(interval)
     }
   })
+}
+
+function* stopCountDown(chan, usage) {
+  while (true) {
+    const action = yield take(String(actions.stopVcodeCountDown))
+    chan.close()
+  }
 }
 
 function* countdown(action) {
@@ -30,9 +38,10 @@ function* countdown(action) {
     while (true) {
       const seconds = yield take(chan)
       yield put(actions.updateCountDownSeconds(seconds))
+      yield fork(stopCountDown, chan)
     }
   } finally {
-    yield put(actions.updateCountDownSeconds(0))
+    // yield put(actions.updateCountDownSeconds(0))
     chan.close()
   }
 }

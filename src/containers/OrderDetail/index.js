@@ -56,7 +56,10 @@ export default class OrderDetail extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.actions.getOneOrderRequested({ id: '24'})
+    const { navigation } = this.props
+    const { id } = navigation.state.params
+    console.warn('orderid', id)
+    this.props.actions.getOneOrderRequested({ id })
   }
 
   render() {
@@ -67,14 +70,48 @@ export default class OrderDetail extends React.PureComponent {
           showsVerticalScrollIndicator={false}
           >
           <View style={styles.address}>
-            <Icon style={styles.icon} name="ios-locate-outline" size={22} color="#959595" />
+            <Icon style={styles.icon} name="ios-locate-outline" size={22} color="#5dbb80" />
             <View style={styles.rightLoca}>
-              <Text>上海 &nbsp; 上海市&nbsp; 上海市&nbsp; 上海市</Text>
+              <Text style={styles.fontSizeSmal}>{city}&nbsp;{urbanarea}&nbsp;{detailedaddress}</Text>
               <View style={styles.oneLine}>
-                <Text style={styles.name}>邰相贤</Text>
-                <Text>15252739492</Text>
+                <Text style={[styles.name, styles.fontSizeSmal]}>{consignee}</Text>
+                <Text style={[styles.name, styles.fontSizeSmal]}>{telephone}</Text>
+                <Text style={styles.fontSizeSmal}>距离送货中心:&nbsp;{distance}公里</Text>
               </View>
+              <Image
+                source={require('../../resources/images/letter-3x.png')}
+                style={{width: width - 40, height: 2, marginTop: 10}}
+              />
             </View>
+          </View>
+          <View
+            style={styles.oneLineWrap}
+            >
+            <View
+              style={styles.listWrap}
+              >
+              <FlatList
+                data={imgs}
+                style={styles.list}
+                keyExtractor={this._keyExtractor}
+                onPress={() => AlertIOS.alert('clicked')}
+                renderItem={({item}) => <Image
+                  style={styles.img}
+                  source={{ uri: item.imgpath }}
+                  style={styles.imgWrap}
+                 />}
+                horizontal={true}
+                // ListFooterComponent={this.listFooter}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.rightPart}
+              onPress={this.navGoodsList}
+              >
+              <Text>共计{sumTotal}件</Text>
+              <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
+            </TouchableOpacity>
           </View>
           <View style={styles.goodsList}>
             <Text style={styles.goodsTitle}>查看商品详情</Text>

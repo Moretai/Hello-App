@@ -12,7 +12,8 @@ import {
   Image,
   AlertIOS,
   Button,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
  } from 'react-native'
 import { withNavigation, NavigationActions } from 'react-navigation'
 import * as actions from '../../actions/order'
@@ -37,27 +38,39 @@ const mapTypeOrder = (type) => {
   }
 }
 
+@withNavigation
 class ItemCell extends React.PureComponent {
+  _keyExtractor = (item, index) => (item + `?id=${Math.random()}`)
+
+  _viewDetail = (id) => {
+    const { navigation } = this.props
+    navigation.navigate('OrderDetail',{ id })
+  }
+
   render() {
+    const { createtime, ordernum, imgpathlist, finalfee, orderId} = this.props.item
+    const imgsOrigin = imgpathlist && imgpathlist.split(',')
+    const imgs = imgsOrigin && imgsOrigin.map(x => (x + `?id=${Math.random()}`))
     return (
       <View style={styles.cell}>
         <View style={styles.time}>
-          <Text style={styles.timeText}>2017-12-07 15:44:44</Text>
+          <Text style={styles.timeText}>{createtime}</Text>
         </View>
+        {imgs &&
         <FlatList
-          data={[{key: 'a'}, {key: 'b'},{key: 'c'},{key: 'd'},{key: 'e'},{key: 'f'},{key: 'g'},{key: 'h'}]}
+          data={imgs}
           style={styles.list}
           keyExtractor={this._keyExtractor}
-          onPress={() => AlertIOS.alert('clicked')}
-          renderItem={({item}) => <Image
+          renderItem={({item, index}) => <Image
+            key={Math.random()}
             style={styles.img}
-            source={require('../../resources/images/avatar.jpg')}
+            source={{ uri: item}}
             style={{width: 60, height: 60, borderRadius: 30}}
            />}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-        />
-      <View style={styles.row}>
+        />}
+      {/* <View style={styles.row}>
         <View style={styles.timeLine}>
           <View style={styles.statusCell}>
             <Icon style={styles.icon} name="ios-list-box-outline" size={22} color="#5dbb80" />
@@ -85,13 +98,14 @@ class ItemCell extends React.PureComponent {
             <Text style={styles.statusText}>已签收</Text>
           </View>
         </View>
-        <View style={styles.total}>
-          <Text style={styles.totalMoney}>¥188</Text>
-        </View>
-      </View>
+
+      </View> */}
       <View style={styles.detail}>
+        <View style={styles.total}>
+          <Text style={styles.totalMoney}>¥{finalfee || '---'}</Text>
+        </View>
         <TouchableOpacity
-          onPress={this._viewDetail}
+          onPress={this._viewDetail.bind(this, orderId)}
           >
           <Text style={styles.checkDetail}>查看详情</Text>
         </TouchableOpacity>
@@ -102,13 +116,32 @@ class ItemCell extends React.PureComponent {
 }
 
 /**
- * 1 未付款
- * 2 已付款待发货
- * 3 已发货
- * 4 已完成
- * 5 已退款
- * 6 已取消
+1 未付款
+2 已付款待确认
+3 已确认待发货
+4 已发货
+5 已完成
+6 已退款
+// 7 已取消
+all 全部
  **/
+
+ const mapTypeToRequest = (type) => {
+   switch (type) {
+     case 'all':
+       return 'all'
+     case 'unPay':
+       return '1'
+     case 'unSend':
+       return '2'
+     case 'unReceive':
+       return '3-4'
+     case 'done':
+       return '5'
+     default:
+       return '全部'
+   }
+ }
 
 @connect(
   state => ({
@@ -132,31 +165,130 @@ export default class OrderList extends React.PureComponent {
     )
     })
 
-  _viewDetail = (id) => {
-    const { navigation } = this.props
-    navigation.navigate('OrderDetail',{ id })
-  }
 
-  _keyExtractor = (item, index) => item.id
+
+  _keyExtractor = (item, index) => (item.ordernum + Math.random())
 
   componentDidMount() {
-    this.props.actions.fetchListOrdersRequested({ type: '1', page: 1, limit: 10 })
+    const { navigation } = this.props
+    const { type } = navigation.state.params
+    if (!type) {return navigation.navigate('User')}
+    this.props.actions.fetchListOrdersRequested({ type: mapTypeToRequest(type), page: 1, limit: 3 })
   }
 
-  componentWillUnmount() {
-    console.warn('componentWillUnmount----->');
+  _renderItem = ({item}) => {
+    return(
+    <ItemCell item={item} />
+  )}
+
+  hasMore = () => {
+    const { list, navigation } = this.props
+    const total = list.get('data').get('count')
+    const data = list.get('data').get('data')
+    const length = data && data.size
+    return length < Number(total)
+  }
+
+  _endReach = ({ distanceFromEnd }) => {
+    console.warn('distanceFromEnd-->', distanceFromEnd)
+    if (distanceFromEnd < -10) return
+    const { list, navigation } = this.props
+    const { type } = navigation.state.params
+    const pageNum = list.get('page')
+    const loadMoreLoading = list.get('loadMoreloading')
+
+    if (loadMoreLoading || !this.hasMore()) {
+      return
+    }
+
+    this.props.actions.loadMoreOrderListRequested({ type, page: pageNum + 1, limit: 3 })
+  }
+
+  // _renderHeader = () => (
+  //   <View>
+  //     <Text style={styles.mainTitle}>食客皆宜</Text>
+  //   </View>
+  // )
+
+  _renderFooter = () => {
+    const { list } = this.props
+    const loadMoreLoading = list.get('loadMoreloading')
+    const loadMoreLoaded = list.get('loadMoreloaded')
+    const loadMoreError = list.get('loadMoreError')
+    const loadMoreShowError = list.get('loadMoreShowError')
+
+    if (loadMoreLoading) {
+      return <View style={styles.loadingTip}>
+        <ActivityIndicator /><Text style={styles.tipText}>正在加载中。。</Text>
+      </View>
+    }
+    if (loadMoreShowError && loadMoreError) {
+      return <View style={styles.loadingTip}>
+        <Text>加载失败。。{loadMoreError}</Text>
+      </View>
+    }
+
+    if (this.hasMore() && loadMoreLoaded) {
+      return <View style={styles.loadingTip}>
+        <Text>下拉加载更多数据~</Text>
+    </View>
+    }
+
+    if (!this.hasMore()) {
+      return <View style={styles.loadingTip}>
+        <Text>已无更多数据~</Text>
+    </View>
+    }
+
+    return <View style={styles.loadingTip}>
+      <Text>~</Text>
+  </View>
+
+  }
+
+  _scrollToEnd = () => {
+    console.warn('_scrollToEnd...')
   }
 
   render() {
     const { list } = this.props
+    console.warn('list....',list)
+    const data = list.get('data')
+    const loading = list.get('loading')
+    const error = list.get('error')
+    const contentIm = data && data.get('data')
+    const content = contentIm && contentIm.toJS()
+    console.warn('content---', content)
+    if (error) {
+      return (
+        <View>
+          <Text>error...{error}</Text>
+        </View>
+      )
+    }
+    if (loading) {
+      return (
+        <View>
+          <Text>loading...</Text>
+        </View>
+      )
+    }
     return (
-      <ScrollView style={styles.wrap}>
-        <ItemCell />
-        <ItemCell />
-        <ItemCell />
-        <ItemCell />
-        <ItemCell />
-      </ScrollView>
+      <View style={styles.wrap}>
+        {content &&
+        <FlatList
+          data={content}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderItem}
+          onEndReached={this._endReach}
+          onEndReachedThreshold={0.1}
+          scrollToEnd={this._scrollToEnd}
+          bounces={false}
+          // ListHeaderComponent={this._renderHeader}
+          ListFooterComponent={this._renderFooter}
+          showsVerticalScrollIndicator={false}
+        />}
+      </View>
     )
   }
 }

@@ -7,6 +7,7 @@ const initialState = Immutable.fromJS({
   loaded: false,
   error: null,
   data: null,
+  logined: false,
   validate: {
     loading: false,
     loaded: false,
@@ -22,6 +23,7 @@ export default handleActions({
   [actions.loginSucceed](state, action) {
     return state.set('loading', false)
     .set('loaded', true)
+    .set('logined', true)
     .set('data', Immutable.fromJS(action.payload))
   },
   [actions.loginFailed](state, action) {
@@ -47,6 +49,6 @@ export default handleActions({
     .set('error', action.payload))
   },
   [actions.logOut](state, action) {
-    return state.set('data', null)
+    return state.set('data', null).set('logined', false)
   }
 }, initialState)
