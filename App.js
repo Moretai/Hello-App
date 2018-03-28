@@ -6,6 +6,7 @@ import {
   Text
 } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
+import SplashScreen from 'react-native-splash-screen'
 import AppWithNavigationState from './src/navigators'
 import configure from './src/store'
 import * as routerActions from './src/actions/router'
@@ -17,6 +18,7 @@ store.runSaga(sagas)
 console.disableYellowBox = true
 console.ignoredYellowBox = ['Remote debugger']
 
+console.warn('SplashScreen',SplashScreen)
 @connect(
   undefined,
   dispatch => ({
@@ -35,7 +37,10 @@ class Conatienr extends React.PureComponent {
 
   componentDidMount() {
       configure (
-        x => this.setState({ storeCreated: true })
+        x => {
+          this.setState({ storeCreated: true })
+          SplashScreen.hide()
+        }
       )
       // configure(
       //   (err,restoredState) => console.warn('restoredState',restoredState)
