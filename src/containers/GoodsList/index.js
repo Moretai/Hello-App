@@ -38,6 +38,7 @@ export default class GoodsList extends React.PureComponent {
       headerLeft: (
       <Button
         title="返回"
+color="#61b981"
         onPress={() => navigation.dispatch(NavigationActions.back())}
       />
     )
@@ -76,7 +77,7 @@ export default class GoodsList extends React.PureComponent {
           >
           { imgs &&
             imgs.map(item => (
-              <View key={item} style={styles.cell}>
+              <View key={Math.random()} style={styles.cell}>
                 <View style={styles.cellLeft}>
                   <Image
                     source={{ uri: item.imgpath }}

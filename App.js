@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import SplashScreen from 'react-native-splash-screen'
+import { AppInstalledChecker, CheckPackageInstallation } from 'react-native-check-app-install'
 import AppWithNavigationState from './src/navigators'
 import configure from './src/store'
 import * as routerActions from './src/actions/router'
@@ -19,6 +20,41 @@ console.disableYellowBox = true
 console.ignoredYellowBox = ['Remote debugger']
 
 console.warn('SplashScreen',SplashScreen)
+
+// AppInstalledChecker
+// .isAppInstalled('alipay')
+// .then((isInstalled) => {
+//     // isInstalled is true if the app is installed or false if not
+//     console.warn('alipay install------', isInstalled)
+// })
+// AppInstalledChecker
+//     .checkURLScheme('alipay') // omit the :// suffix
+//     .then((isInstalled) => {
+//         console.warn('alipay install------', isInstalled)
+//     })
+// AppInstalledChecker
+// .isAppInstalled('weixin')
+// .then((isInstalled) => {
+//     // isInstalled is true if the app is installed or false if not
+//     console.warn('weixin install------', isInstalled)
+// })
+// AppInstalledChecker
+//     .checkURLScheme('weixin') // omit the :// suffix
+//     .then((isInstalled) => {
+//         console.warn('weixin install------', isInstalled)
+//     })
+
+// AppInstalledChecker
+// .isAppInstalled('alipayshare')
+// .then((isInstalled) => {
+//     // isInstalled is true if the app is installed or false if not
+//     console.warn('alipayshare install------', isInstalled)
+// })
+// AppInstalledChecker
+//     .checkURLScheme('alipayshare') // omit the :// suffix
+//     .then((isInstalled) => {
+//         console.warn('alipayshare install------', isInstalled)
+//     })
 @connect(
   undefined,
   dispatch => ({
@@ -39,13 +75,18 @@ class Conatienr extends React.PureComponent {
       configure (
         x => {
           this.setState({ storeCreated: true })
-          SplashScreen.hide()
+
         }
       )
       // configure(
       //   (err,restoredState) => console.warn('restoredState',restoredState)
       // )
       this.props.actions.locationInit()
+      AppInstalledChecker
+          .checkURLScheme('alipay') // omit the :// suffix
+          .then((isInstalled) => {
+              console.warn('alipay install------', isInstalled)
+          })
     }
   render() {
     if (!this.state.storeCreated) {
@@ -58,7 +99,8 @@ class Conatienr extends React.PureComponent {
               >componentDidMountcomponentDidMountcomponentDidMountcomponentDidMountcomponentDidMount</Text>
           </View>
         )
-      }
+    }
+    SplashScreen.hide()
     return (
       <AppWithNavigationState />
     )

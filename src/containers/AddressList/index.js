@@ -15,6 +15,7 @@ import { withNavigation, NavigationActions } from 'react-navigation'
 import { Toast } from 'antd-mobile'
 import { stringCut } from '../../utils/tools'
 import Icon from 'react-native-vector-icons/Ionicons'
+import NoLogin from '../../components/NoLogin'
 import * as addressActions from '../../actions/address'
 
 const { height, width } = Dimensions.get('window')
@@ -25,7 +26,8 @@ const { height, width } = Dimensions.get('window')
 @connect(
   state => ({
     addressList: state.get('address'),
-    setDefault: state.get('address').get('setDefault')
+    setDefault: state.get('address').get('setDefault'),
+    logined: state.get('login').get('logined'),
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -42,6 +44,7 @@ export default class AddressList extends React.PureComponent {
     headerLeft: (
       <Button
         title="返回"
+        color="#61b981"
         // onPress={() => navigation.dispatch(NavigationActions.navigate({routeName: 'User'}))}
         onPress={() => navigation.dispatch(NavigationActions.navigate(
           {routeName: (navigation.state && navigation.state.params && navigation.state.params.from) || 'ShoppingCar' }
@@ -84,7 +87,12 @@ export default class AddressList extends React.PureComponent {
   // TODO ScrollView 不然不能滚动~！！
   // TODO 长地址省略。。。
   render() {
-    const { addressList, setDefault } = this.props
+    const { addressList, setDefault, logined } = this.props
+    if(!logined) {
+      return(
+        <NoLogin />
+      )
+    }
     const addressListLoading = addressList.get('loading')
     const addressListData = addressList.get('data')
     const setDefaultLoading = setDefault.get('loading')
@@ -109,13 +117,13 @@ export default class AddressList extends React.PureComponent {
               </View>
             </View>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={this.modifyAddress.bind(this, item)}
             >
             <View style={styles.editWrap}>
               <Text style={styles.edit}>编辑</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={this.delAddress.bind(this, item.receiptinformationid)}
             >

@@ -19,6 +19,10 @@ import OrderList from '../containers/OrderList'
 import Test from '../containers/Test/demoa'
 import OrderConfirm from '../containers/OrderConfirm'
 import GoodsList from '../containers/GoodsList'
+import Law from '../containers/Law'
+import Help from '../containers/Help'
+import PayResult from '../containers/PayResult'
+import AnthorGoodsList from '../containers/AnthorGoodsList'
 // import Test from '../containers/Test'
 
 const headerConfig = {
@@ -44,6 +48,48 @@ const OrderConfirmStack = StackNavigator({
   OrderList: {
     screen: OrderConfirm,
     // path: '/addaddress',
+    navigationOptions: ({navigation}) => ({
+      ...headerConfig,
+      ...addRightToBalance
+    })
+  }
+})
+
+const AnthorGoodsListStack = StackNavigator({
+  OrderList: {
+    screen: AnthorGoodsList,
+    // path: '/addaddress',
+    navigationOptions: ({navigation}) => ({
+      ...headerConfig,
+      ...addRightToBalance
+    })
+  }
+})
+
+const PayResultStack = StackNavigator({
+  OrderList: {
+    screen: PayResult,
+    // path: '/addaddress',
+    navigationOptions: ({navigation}) => ({
+      ...headerConfig,
+      ...addRightToBalance
+    })
+  }
+})
+
+const LawStack = StackNavigator({
+  OrderList: {
+    screen: Law,
+    navigationOptions: ({navigation}) => ({
+      ...headerConfig,
+      ...addRightToBalance
+    })
+  }
+})
+
+const HelpStack = StackNavigator({
+  OrderList: {
+    screen: Help,
     navigationOptions: ({navigation}) => ({
       ...headerConfig,
       ...addRightToBalance
@@ -181,7 +227,7 @@ const OrderDetailStack = StackNavigator({
     screen: OrderDetail,
     path: '/',
     navigationOptions: {
-      title: 'OrderDetail',
+      title: '订单详情',
       ...headerConfig,
       ...addRightToBalance
     }
@@ -283,20 +329,20 @@ const Tabs = TabNavigator(
         )
       }
     },
-    Test: {
-      screen: TestStack,
-      path: '/test',
-      navigationOptions: {
-        tabBarLabel: 'Shop',
-        tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
-          <Ionicons
-            name={focused ? 'ios-settings' : 'ios-settings-outline'}
-            size={22}
-            style={{ color: tintColor }}
-          />
-        )
-      }
-    }
+    // Test: {
+    //   screen: TestStack,
+    //   path: '/test',
+    //   navigationOptions: {
+    //     tabBarLabel: 'Shop',
+    //     tabBarIcon: ({ tintColor, focused }: { tintColor: string, focused: boolean }) => (
+    //       <Ionicons
+    //         name={focused ? 'ios-settings' : 'ios-settings-outline'}
+    //         size={22}
+    //         style={{ color: tintColor }}
+    //       />
+    //     )
+    //   }
+    // }
   },
   {
     tabBarPosition: 'bottom',
@@ -349,10 +395,15 @@ export const Navigator = StackNavigator(
     OrderList: { screen: OrderListStack },
     OrderConfirm: { screen: OrderConfirmStack },
     GoodsList: { screen: GoodsListStack },
+    Law: { screen: LawStack },
+    Help: { screen: HelpStack },
+    PayResult: { screen: PayResultStack },
+    AnthorGoodsList: { screen: AnthorGoodsListStack },
   },
   {
     headerMode: 'none',
     // mode: 'modal',
+    // initialRouteName: 'PayResult',
     initialRouteName: 'Tabs',
     cardStyle: {
       // height: 20

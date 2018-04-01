@@ -20,7 +20,8 @@ const { height, width } = Dimensions.get('window')
 // @withNavigation
 @connect(
   state => ({
-    login: state.get('login').get('data')
+    login: state.get('login').get('data'),
+    logined: state.get('login').get('logined'),
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -42,10 +43,21 @@ export default class User extends React.PureComponent {
     navigation.navigate('AddressList',{from: 'User'})
   }
 
+  navToHelp = () => {
+    const { navigation } = this.props
+    navigation.navigate('Help',{from: 'User'})
+  }
+
+  navToLogin = () => {
+    const { navigation } = this.props
+    navigation.navigate('Login')
+  }
+
   logOut = () => {
     this.props.actions.logOut()
   }
   render() {
+    const { logined } = this.props
     const name = this.props.login && this.props.login.get('name')
     console.warn('name====>', name);
     return (
@@ -62,12 +74,21 @@ export default class User extends React.PureComponent {
               style={styles.avatar}
             />
             <Text style={styles.nickname}>{name || '您还未登录'}</Text>
+          {logined ?
             <TouchableOpacity
               onPress={this.logOut}
               style={styles.touchCell}
             >
-              <Text style={styles.checkAllOrder}>退出</Text>
+              <Text style={[styles.checkAllOrder, styles.logAbout]}>退出</Text>
             </TouchableOpacity>
+          :
+            <TouchableOpacity
+              onPress={this.navToLogin}
+              style={styles.touchCell}
+            >
+              <Text style={[styles.checkAllOrder, styles.logAbout]}>登录</Text>
+            </TouchableOpacity>
+          }
           </View>
         </View>
         <View style={styles.block}>
@@ -134,6 +155,7 @@ export default class User extends React.PureComponent {
         <View style={[styles.block, styles.hello]}>
           <TouchableOpacity
             style={styles.arrowBtn}
+            onPress={this.navToHelp}
             >
           <View style={[styles.last, styles.firstLast]}>
             <View style={styles.cellPart}>
@@ -145,7 +167,7 @@ export default class User extends React.PureComponent {
             </View>
           </View>
         </TouchableOpacity>
-          <View style={[styles.last, styles.firstLast]}>
+          {/* <View style={[styles.last, styles.firstLast]}>
             <TouchableOpacity
               style={styles.arrowBtn}
               >
@@ -170,9 +192,9 @@ export default class User extends React.PureComponent {
                   <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
               </View>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
-        <View style={[styles.block, styles.blockCell]}>
+        {/* <View style={[styles.block, styles.blockCell]}>
           <TouchableOpacity
             style={styles.arrowBtn}
             >
@@ -184,13 +206,18 @@ export default class User extends React.PureComponent {
                 <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
             </View>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </ScrollView>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  logAbout: {
+    paddingLeft: 20,
+    color: '#5dbb80',
+    fontWeight: '700'
+  },
   wrap: {
     backgroundColor: '#f0f0f0',
   },

@@ -30,8 +30,16 @@ function* alipay(action) {
   const queryString = action.data
   console.warn('queryString', queryString)
   try {
-    const result = yield call(Alipay.pay, queryString)
+    const result = yield call(Alipay.pay, queryString.zfbKey)
     console.warn('alipay result', result)
+    yield put({type: "Navigation/NAVIGATE", routeName: "PayResult", params: { result }})
+    // if (result === '支付成功') {
+    yield call(delay, 3000)
+    yield put({type: "Navigation/NAVIGATE", routeName: "User"})
+    // }
+
+    // result 支付成功
+    // result 已取消支付
     yield put(actions.jumpAlipaySucceed(result))
   } catch (e) {
     yield put(actions.jumpAlipayFailed(e.message))
@@ -42,11 +50,5 @@ export default function* paySaga() {
   yield fork(takeEvery, String(actions.payRequested), pay)
   yield fork(takeEvery, String(actions.paySucceed), paySucceed)
 
-  yield fork(takeEvery, String(actions.jumpAlipayRequested), alipay)
+  // yield fork(takeEvery, String(actions.jumpAlipayRequested), alipay)
 }
-// // export const payRequested = createAction('pay/PAY_REQUESTED')
-// // export const paySucceed = createAction('pay/PAY_SUCCEED')
-// // export const payFailed = createAction('pay/PAY_FAILED')
-// export const jumpAlipayRequested = createAction('pay/JUMP_ALIPAY_REQUESTED')
-// export const jumpAlipaySucceed = createAction('pay/JUMP_ALIPAY_SUCCEED')
-// export const jumpAlipayFailed = createAction('pay/JUMP_ALIPAY_FAILED')

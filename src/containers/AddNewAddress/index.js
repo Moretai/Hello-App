@@ -24,7 +24,7 @@ const { height, width } = Dimensions.get('window')
 // TODO 输入法能输入中文
 // TODO 字符串截取
 // TODO 选择默认区域过小
-const checkValidePhoneReceiver = receiver => /^1[3|4|5|7|8][0-9]\d{8}$/.test(receiver)
+const checkValidePhoneReceiver = receiver => /^1[0-9]\d{9}$/.test(receiver)
 
 const validate = (values, props) => {
   const errors = {}
@@ -53,11 +53,12 @@ const validate = (values, props) => {
   return errors
 }
 
-const renderInput = ({ input: { onChange, ...restInput }, name, label, readOnly,placeholder, meta: { touched, error}}) => {
+const renderInput = ({ input: { onChange, onBlur, value,...restInput }, name, label, readOnly,placeholder, meta: { touched, error}}) => {
   return (
     <View style={styles.cell}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput style={styles.input} onChangeText={onChange} {...restInput} placeholder={placeholder} editable={!readOnly}/>
+    {/* <TextInput style={styles.input} onChangeText={onChange} onBlur={onBlur} {...restInput} placeholder={placeholder} editable={!readOnly}/> */}
+    <TextInput style={styles.input} onChangeText={onChange} placeholder={placeholder} editable={!readOnly}/>
       {touched && error &&<Text style={styles.error}>{error}</Text>}
     </View>
   )
@@ -72,8 +73,10 @@ const dataB = Immutable.fromJS({
 })
 @connect(
   state => ({
-    initialValues: state.get('address').get('oneItem')
-    // initialValues: dataB
+    // initialValues: state.get('address').get('oneItem').toJS(),
+    // initialValues: {
+    //   city: '无锡市'
+    // }
     // initialValues: state.get('address')
   }),
   dispatch => ({
@@ -89,23 +92,24 @@ const dataB = Immutable.fromJS({
 class AddNewAddress extends React.PureComponent {
 
   submit = values => {
-    const { initialValues } = this.props
-    const receiptinformationid = initialValues && initialValues.get('receiptinformationid')
-    const isdefault = initialValues && initialValues.get('isdefault')
-    console.warn('receiptinformationid--->', receiptinformationid);
-    if (receiptinformationid) {
-      return this.props.actions.updateAddressRequested(values.set('receiptinformationid', receiptinformationid).set('isdefault', isdefault).toJS())
-    }
+    // const { initialValues } = this.props
+    // const receiptinformationid = initialValues && initialValues.get('receiptinformationid')
+    // const isdefault = initialValues && initialValues.get('isdefault')
+    // console.warn('receiptinformationid--->', receiptinformationid);
+    // if (receiptinformationid) {
+    //   return this.props.actions.updateAddressRequested(values.set('receiptinformationid', receiptinformationid).set('isdefault', isdefault).toJS())
+    // }
+    // console.warn('value.toJS()',values.toJS())
     this.props.actions.addAddressRequested(values.toJS())
   }
 
   render() {
-    const { handleSubmit, invalid } = this.props
+    const { handleSubmit, invalid,  } = this.props
     return (
       <View style={styles.wrap}>
         <Field name='consignee' type="text" label='收货人' placeholder='收货人姓名' component={renderInput} />
         <Field name='telephone' type="text" label='手机号码' placeholder='配送员联系你的电话' component={renderInput} />
-        <Field name='city' type="text" label='所在城市' placeholder='填写您所在的城市' readOnly={true} component={renderInput} />
+        <Field name='city' type="text" label='所在城市' placeholder='填写您所在的城市' component={renderInput} />
         <Field name='urbanarea' type="text" label='收货地址' placeholder='小区/餐厅名字' component={renderInput} />
         <Field name='detailedaddress' type="text" label='楼号门牌' placeholder='楼号/单元/门牌号' component={renderInput} />
         <TouchableOpacity

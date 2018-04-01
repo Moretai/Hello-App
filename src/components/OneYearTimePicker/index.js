@@ -7,13 +7,14 @@ import { Picker, DatePicker, List } from 'antd-mobile'
 
 const nowTimeStamp = Date.now()
 const now = new Date(nowTimeStamp)
+// console.warn('now', now)
 
 export default class OneYearTimePicker extends React.PureComponent {
   constructor(props) {
     super(props)
-    this.state = {
-      date: now
-    }
+    // this.state = {
+    //   date: this.props.init
+    // }
   }
 
   render() {
@@ -23,8 +24,9 @@ export default class OneYearTimePicker extends React.PureComponent {
           mode="date"
           title="选择日期"
           extra="Optional"
-          value={this.state.date}
-          onChange={date => this.setState({ date })}
+          value={this.props.date}
+          onOk={(v) => this.props.onOk(v)}
+          onChange={date => this.props.valueChange({ date })}
           itemStyle={{ fontSize: 14 }}
         >
           <List.Item arrow="horizontal">

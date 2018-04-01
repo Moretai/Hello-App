@@ -3836,6 +3836,12 @@ react-native-alipay-zmt@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-alipay-zmt/-/react-native-alipay-zmt-2.0.0.tgz#df38b169736eed75140693df4842e268d6e321e7"
 
+react-native-animatable@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.2.4.tgz#b5fb7657e8f6edadbc26697057a327fb920b3039"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-branch@2.0.0-beta.3:
   version "2.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.0.0-beta.3.tgz#2167af86bbc9f964bd45bd5f37684e5b54965e32"
@@ -3844,11 +3850,19 @@ react-native-camera-roll-picker@^1.2.1:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/react-native-camera-roll-picker/-/react-native-camera-roll-picker-1.2.3.tgz#b117fd3a2b9012dcccee1261a9bc427226b8d6d2"
 
+react-native-check-app-install@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-check-app-install/-/react-native-check-app-install-0.0.4.tgz#336b842e9816c9af373498fe397072ec9c54ed40"
+
 react-native-collapsible@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-0.9.0.tgz#207849faa15493820d19fa6a5e58f7c7b6c1b910"
   dependencies:
     prop-types "^15.5.10"
+
+react-native-communications@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
 
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
@@ -3890,6 +3904,10 @@ react-native-menu@^0.23.0:
     create-react-class "^15.6.0"
     prop-types "^15.5.10"
     react-timer-mixin "^0.13.3"
+
+react-native-phone-call@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-phone-call/-/react-native-phone-call-1.0.4.tgz#809b7dd27452e429c9deddb4c311997702e333ba"
 
 react-native-popup-dialog@^0.10.44:
   version "0.10.44"

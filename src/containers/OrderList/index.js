@@ -17,6 +17,8 @@ import {
  } from 'react-native'
 import { withNavigation, NavigationActions } from 'react-navigation'
 import * as actions from '../../actions/order'
+import NoLogin from '../../components/NoLogin'
+import NoData from '../../components/NoData'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 const { height, width } = Dimensions.get('window')
@@ -145,7 +147,8 @@ all 全部
 
 @connect(
   state => ({
-    list: state.get('order').get('list')
+    list: state.get('order').get('list'),
+    logined: state.get('login').get('logined'),
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -160,6 +163,7 @@ export default class OrderList extends React.PureComponent {
       headerLeft: (
       <Button
         title="返回"
+        color="#61b981"
         onPress={() => navigation.dispatch(NavigationActions.back())}
       />
     )
@@ -170,7 +174,8 @@ export default class OrderList extends React.PureComponent {
   _keyExtractor = (item, index) => (item.ordernum + Math.random())
 
   componentDidMount() {
-    const { navigation } = this.props
+    const { navigation, logined } = this.props
+    if(!logined) return
     const { type } = navigation.state.params
     if (!type) {return navigation.navigate('User')}
     this.props.actions.fetchListOrdersRequested({ type: mapTypeToRequest(type), page: 1, limit: 3 })
@@ -201,7 +206,7 @@ export default class OrderList extends React.PureComponent {
       return
     }
 
-    this.props.actions.loadMoreOrderListRequested({ type, page: pageNum + 1, limit: 3 })
+    this.props.actions.loadMoreOrderListRequested({ type: mapTypeToRequest(type), page: pageNum + 1, limit: 3 })
   }
 
   // _renderHeader = () => (
@@ -251,7 +256,12 @@ export default class OrderList extends React.PureComponent {
   }
 
   render() {
-    const { list } = this.props
+    const { list, logined} = this.props
+    if(!logined) {
+      return(
+        <NoLogin />
+      )
+    }
     console.warn('list....',list)
     const data = list.get('data')
     const loading = list.get('loading')
@@ -273,21 +283,22 @@ export default class OrderList extends React.PureComponent {
         </View>
       )
     }
+    if(content && content.length === 0 ) return <NoData />
     return (
       <View style={styles.wrap}>
-        {content &&
-        <FlatList
-          data={content}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderItem}
-          onEndReached={this._endReach}
-          onEndReachedThreshold={0.1}
-          scrollToEnd={this._scrollToEnd}
-          bounces={false}
-          // ListHeaderComponent={this._renderHeader}
-          ListFooterComponent={this._renderFooter}
-          showsVerticalScrollIndicator={false}
-        />}
+        {content && content.length > 0 &&
+          <FlatList
+            data={content}
+            keyExtractor={this._keyExtractor}
+            renderItem={this._renderItem}
+            onEndReached={this._endReach}
+            onEndReachedThreshold={0.1}
+            scrollToEnd={this._scrollToEnd}
+            bounces={false}
+            // ListHeaderComponent={this._renderHeader}
+            ListFooterComponent={this._renderFooter}
+            showsVerticalScrollIndicator={false}
+          />}
       </View>
     )
   }

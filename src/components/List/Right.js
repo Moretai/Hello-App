@@ -17,6 +17,7 @@ import {
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import Immutable from 'immutable'
+import Loading from '../Loading'
 import Icon from 'react-native-vector-icons/Ionicons'
 import * as listActions from '../../actions/list'
 import * as searchListshopCarActions from '../../actions/searchlist'
@@ -208,9 +209,7 @@ export default class Right extends React.PureComponent {
     }
     if (loading) {
       return (
-        <View>
-          <Text>loading...</Text>
-        </View>
+        <Loading />
       )
     }
     return (

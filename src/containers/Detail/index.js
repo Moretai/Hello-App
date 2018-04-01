@@ -38,6 +38,7 @@ export default class Detail extends React.PureComponent {
       headerLeft: (
         <Button
           title="返回"
+          color="#61b981"
           onPress={() => navigation.dispatch(NavigationActions.back())}
         />
     ),
@@ -332,7 +333,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row'
   },
-  
+
   priceDelete: {
     color: '#9a9a9a',
     paddingTop: 3,

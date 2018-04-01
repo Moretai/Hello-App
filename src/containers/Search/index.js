@@ -8,7 +8,8 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   AlertIOS,
-  AsyncStorage
+  AsyncStorage,
+  Keyboard
 } from 'react-native'
 import Immutable from 'immutable'
 import { connect } from 'react-redux'
@@ -102,6 +103,7 @@ export default class Search extends React.PureComponent {
           <TextInput
             style={styles.textInput}
             onChangeText={this._textChange}
+            onBlur={Keyboard.dismiss}
             value={this.state.text}
             placeholder='输入您想查找的菜品。。。'
             underlineColorAndroid="transparent"
@@ -128,29 +130,34 @@ export default class Search extends React.PureComponent {
             ))}
           </View>
         </View> */}
-        <View>
-          <View style={styles.title}>
-            <Text style={styles.mainTitle}>热门搜索</Text>
+        <TouchableWithoutFeedback style={styles.touchWrap} onPress={() => Keyboard.dismiss()} accessible={false}>
+          <View style={styles.touchWrap}>
+            <View style={styles.title}>
+              <Text style={styles.mainTitle}>热门搜索</Text>
+            </View>
+            <View style={styles.listWrap}>
+              {/* {data && data instanceof Immutable.Map && data.toJS().map((item, index) => ( */}
+              {data && data.toJS().map((item, index) => (
+                <TouchableOpacity
+                  onPress={this._search.bind(this, item.searchname)}
+                  style={styles.cellWrap}
+                  key={index}
+                  >
+                  <Text style={styles.cell}>{item.searchname}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
-          <View style={styles.listWrap}>
-            {/* {data && data instanceof Immutable.Map && data.toJS().map((item, index) => ( */}
-            {data && data.toJS().map((item, index) => (
-              <TouchableOpacity
-                onPress={this._search.bind(this, item.searchname)}
-                style={styles.cellWrap}
-                key={index}
-                >
-                <Text style={styles.cell}>{item.searchname}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+        </TouchableWithoutFeedback>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  touchWrap: {
+    flex: 1,
+  },
   wrap: {
     flex: 1,
     paddingLeft: 10,

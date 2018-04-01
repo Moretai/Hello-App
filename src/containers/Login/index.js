@@ -8,7 +8,8 @@ import {
   StyleSheet,
   Dimensions,
   TextInput,
-  Button
+  Button,
+  Image
  } from 'react-native'
  import {
    Toast
@@ -73,6 +74,7 @@ export default class Login extends React.PureComponent {
       headerLeft: (
       <Button
         title="返回"
+        color="#61b981"
         onPress={() => navigation.dispatch(NavigationActions.back())}
         />
       ),
@@ -92,6 +94,11 @@ export default class Login extends React.PureComponent {
 
   componentDidMount() {
     // this.props.actions.validateTokenRequested()
+  }
+
+  navToLaw =() => {
+    const { navigation } = this.props
+    navigation.navigate('Law')
   }
 
   render() {
@@ -119,13 +126,27 @@ export default class Login extends React.PureComponent {
           <Text style={styles.loginText}>登录</Text>
         </TouchableOpacity>
         <Text style={styles.loginTip}>未注册过的用户将直接为您创建账户</Text>
-        <View style={styles.otherLoginWrap}>
+      <View style={styles.serviceWrap}>
+          <Text style={styles.serviceTip}>注册或登录的用户表示您同意</Text>
+          <TouchableOpacity
+            onPress={this.navToLaw}
+            >
+              <Text style={styles.serviceLink}>食客皆宜的网络服务条款</Text>
+          </TouchableOpacity>
+        </View>
+        {/* <View style={styles.otherLoginWrap}>
           <View style={styles.line} />
           <Text style={styles.otherLoginText}>第三方登录</Text>
           <View style={styles.imgsWrap}>
             <Text>微信</Text>
             <Text>QQ</Text>
           </View>
+        </View> */}
+        <View style={styles.logoWrap}>
+          <Image
+            source={require('../../resources/images/logo.png')}
+            style={styles.logo}
+          />
         </View>
       </View>
     )
@@ -133,6 +154,28 @@ export default class Login extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+  logoWrap: {
+    flex: 1,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 60,
+    height: 60,
+  },
+  serviceWrap: {
+    marginTop: 10,
+    flexDirection: 'row'
+  },
+  serviceTip: {
+    fontSize: 12,
+    color: '#8a8a8a'
+  },
+  serviceLink: {
+    fontSize: 12,
+    color: '#5dbb80'
+  },
   wrap: {
     flex: 1,
     paddingTop: 20,

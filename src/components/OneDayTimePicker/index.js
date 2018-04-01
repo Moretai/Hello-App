@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import { Picker, List } from 'antd-mobile'
 
-const data = [
+export const data = [
   {
     value: 'a',
     label: '上午',
@@ -97,7 +97,7 @@ const data = [
   },
   {
     value: 'c',
-    label: '下午',
+    label: '晚上',
     children: [
       {
         value: '20',
@@ -130,17 +130,21 @@ const data = [
 export default class OneDayTimePicker extends React.PureComponent {
   constructor(props) {
     super(props)
-    this.state = {
-      value:['a', '01']
-    }
+    // this.state = {
+    //   value:this.props.init
+    // }
   }
 
-  onOk = (v) => {
-    console.warn('onOk value ====>', v);
-    this.setState({
-      value: v
-    })
-  }
+  // onOk = (v) => {
+  //   console.warn('onOk value ====>', v);
+  //   this.setState({
+  //     value: v
+  //   })
+  // }
+
+  // valueChange = (val) => {
+  //   console.warn('val', val)
+  // }
 
   render() {
     return(
@@ -149,10 +153,10 @@ export default class OneDayTimePicker extends React.PureComponent {
           <Picker
             title="选择具体时间"
             data={data}
-            value={['a', '04']}
             cols={2}
-            value={this.state.value}
-            onOk={this.onOk}
+            value={this.props.date}
+            onOk={(v) => this.props.onOk(v)}
+            onChange={(val) => this.props.valueChange(val)}
             itemStyle={{ width:200 }}
             >
               <List.Item arrow="horizontal">

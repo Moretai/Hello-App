@@ -17,6 +17,9 @@ import {
  } from 'react-native'
  import { SwipeAction } from 'antd-mobile'
  import { stringCut } from '../../utils/tools'
+ import NoLogin from '../../components/NoLogin'
+ import NoData from '../../components/NoData'
+ import Loading from '../../components/Loading'
  import * as shopCarActions from '../../actions/shopcar'
  import * as addressActions from '../../actions/address'
  import * as infoActions from '../../actions/info'
@@ -34,6 +37,7 @@ const { height, width } = Dimensions.get('window')
     shopcar: state.get('shopcar'),
     address: state.get('address').get('getDefault'),
     feeInfo: state.get('fee'),
+    logined: state.get('login').get('logined'),
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -246,9 +250,12 @@ export default class ShoppingCar extends React.PureComponent {
   }
 
   render() {
-    console.log('scrollEnabled...', this.state.scrollEnabled)
-    console.log('flag...', this.state.flag)
-    const { shopcar, address, feeInfo } = this.props
+    const { shopcar, address, feeInfo, logined } = this.props
+    if(!logined) {
+      return(
+        <NoLogin />
+      )
+    }
     const data = shopcar.get('data')
     const error = shopcar.get('error')
     const loaded = shopcar.get('loaded')
@@ -259,12 +266,17 @@ export default class ShoppingCar extends React.PureComponent {
     const dataJs = data && data.toJS()
     const addressData = address && address.get('data')
     const addressInfo = addressData && `${addressData.get('city')} ${addressData.get('urbanarea')} ${addressData.get('detailedaddress')}`
-    // console.warn('address ==>', address);
     const dataLength = dataJs && dataJs.length
     const status = dataJs && dataJs.filter(x => x.checked === '1')
     const statusLength = status && status.length
 
     const feeIntro = feeInfo.get('data') && feeInfo.get('data').get('data')
+
+    const disabled = !feeData || (feeData && Number(feeData.finalfee) <= 0) || !addressInfo
+
+    if(dataJs && dataJs.length === 0) {
+      return <NoData />
+    }
     return (
     <View style={styles.wrap}>
       <ScrollView
@@ -286,6 +298,8 @@ export default class ShoppingCar extends React.PureComponent {
             <Text style={styles.changeAddress}>更换地址</Text>
           </TouchableOpacity>
         </View>
+        {loading && <Loading />}
+        {dataJs && dataJs.length > 0 &&
         <FlatList
           style={styles.list}
           data={dataJs}
@@ -311,7 +325,7 @@ export default class ShoppingCar extends React.PureComponent {
           ListHeaderComponent={this._renderHeader.bind(this, dataJs)}
           // ListFooterComponent={this._renderFooter}
           // ListEmptyComponent={this._renderPlaceholder}
-        />
+        />}
       <View style={styles.btmWrap}>
         <View style={styles.btmItem}>
           <Text style={styles.leftText}>商品总价</Text><Text style={styles.rightText}>¥{feeData && feeData.totalfee}</Text>
@@ -357,8 +371,9 @@ export default class ShoppingCar extends React.PureComponent {
           <Text style={styles.payMoney}>¥{feeData && feeData.finalfee}</Text>
         </View>
         <TouchableOpacity
-          style={styles.rightBar}
+          style={[styles.rightBar, disabled && styles.disabledBtn]}
           onPress={this.generateOrder}
+          disabled={disabled}
           >
         <Text style={styles.goPay}>去支付</Text>
         <Icon style={styles.icon} name="ios-play" size={22} color="#fff" />
@@ -428,6 +443,14 @@ export default class ShoppingCar extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+  disabledBtn: {
+    backgroundColor: '#e2e2e2',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 46,
+    width: 100,
+  },
   wrap: {
     position: 'relative',
     flexDirection: 'row',
@@ -718,18 +741,20 @@ const styles = StyleSheet.create({
   },
   operatorPlaceCellText: {
     textAlign: 'center',
-    paddingTop: 4,
-    paddingBottom: 4,
+    paddingTop: 6,
+    paddingBottom: 6,
     paddingLeft: 10,
     paddingRight: 10,
+    color: '#fff',
+    width: 100,
     // borderStyle: 'solid',
     // borderWidth: 1,
   },
   cancelNumber: {
-    color: '#f5222d',
+    backgroundColor: '#f5222d',
   },
   confirmNumber: {
-    color: '#61b981'
+    backgroundColor: '#61b981'
   },
   feeIntro: {
     fontSize: 11,

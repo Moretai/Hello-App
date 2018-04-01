@@ -36,6 +36,7 @@ export default class SearchScreen extends React.PureComponent {
     headerLeft: (
     <Button
       title="返回"
+color="#61b981"
       onPress={() => navigation.dispatch(NavigationActions.back())}
     />
   )

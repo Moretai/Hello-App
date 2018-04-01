@@ -13,6 +13,7 @@ import {
   RefreshControl,
   Button,
   AlertIOS,
+  Alert,
   Image,
  } from 'react-native'
 import Alipay from 'react-native-alipay-zmt'
@@ -23,6 +24,8 @@ import OneDayTimePicker from '../../components/OneDayTimePicker'
 import * as actions from '../../actions/order'
 import * as payActions from '../../actions/pay'
 import { withNavigation, NavigationActions } from 'react-navigation'
+import { data as DayData } from '../../components/OneDayTimePicker'
+import { timeStampToString } from '../../utils/tools'
 
 import letterBgImg from '../../resources/images/letter-3x.png'
 
@@ -43,26 +46,38 @@ const { height, width } = Dimensions.get('window')
 )
 export default class OrderConfirm extends React.PureComponent {
   static navigationOptions = ({navigation}) => ({
-      // title: `${navigation.state.params.name}收货地址`,
       title: '填写订单',
       headerLeft: (
       <Button
         title="返回"
+        color="#61b981"
         onPress={() => navigation.dispatch(NavigationActions.back())}
       />
     )
   })
+
   constructor(props) {
     super(props)
     this.state = {
-      customChildValue: null
+      customChildValue: null,
+      year: new Date(),
+      day: ['a', '01'],
+      chooseAlipay: false
     }
 
     this.goPay = this.goPay.bind(this)
   }
 
   goPay() {
-    this.props.actions.payRequested({ payWay: '1', deliverTimeForm: '1521902807805', deliverTimeTo: '1521906807805' })
+    const { year, day } = this.state
+    const label = DayData.find(x => x.value === day[0]).children.find(x => x.value === day[1]).label.split('-')
+    const begin = label[0]
+    const end = label[1]
+    // '12.30-13.00' 前面 12.30
+    const beginTimeStamp = Number(new Date(timeStampToString(year.getTime())).getTime()) + 1000 * 60 * 60 * Number(begin)
+    const endTimeStamp = Number(new Date(timeStampToString(year.getTime())).getTime()) + 1000 * 60 * 60 * Number(end)
+
+    this.props.actions.payRequested({ payWay: '1', deliverTimeForm: beginTimeStamp, deliverTimeTo: endTimeStamp })
   }
 
   // _toggleShow = () => {
@@ -87,8 +102,35 @@ export default class OrderConfirm extends React.PureComponent {
     navigation.navigate('GoodsList')
   }
 
+  dayChange = (val) => {
+  }
+
+  dayOpacyChange = (val) => {
+  }
+
+  dayOk = (val) => {
+    const { year, day } = this.state
+    this.setState({
+      day: val
+    })
+  }
+
+  yearOk = (val) => {
+    const { year, day } = this.state
+    this.setState({
+      year: val
+    })
+  }
+
+  chooseAlipay() {
+    this.setState(preState => ({
+      chooseAlipay: !preState.chooseAlipay
+    }))
+  }
+
   render() {
     const { address, shopcar, fee } = this.props
+    const { year, day, chooseAlipay } = this.state
 
     const addressInfo = address && address.get('data')
     const city = addressInfo && addressInfo.get('city')
@@ -107,6 +149,16 @@ export default class OrderConfirm extends React.PureComponent {
 
     const feeInfo = fee.get('data')
     const feeData = feeInfo && feeInfo.size && feeInfo.toJS()
+
+
+    const label = DayData.find(x => x.value === day[0]).children.find(x => x.value === day[1]).label.split('-')[0]
+    // '12.30-13.00' 前面 12.30
+    const chooseTimeStamp = Number(new Date(timeStampToString(year.getTime())).getTime()) + 1000 * 60 * 60 * Number(label)
+
+    let disabled = false
+    if (chooseTimeStamp < Number(new Date().getTime())) {
+      disabled = true
+    }
 
     return (
       <View style={styles.wrap}>
@@ -129,8 +181,12 @@ export default class OrderConfirm extends React.PureComponent {
               />
             </View>
           </View>
-          <OneYearTimePicker />
-          <OneDayTimePicker />
+          <OneYearTimePicker date={year} valueChange={this.dayOpacyChange} onOk={this.yearOk} />
+          <OneDayTimePicker date={day} valueChange={this.dayChange} onOk={this.dayOk} />
+          { disabled &&
+          <View style={styles.disabledArea}>
+              <Text style={styles.disabledTime}>收货时间不能小于当前时间</Text>
+          </View>}
           <View
             style={styles.oneLineWrap}
             >
@@ -160,23 +216,6 @@ export default class OrderConfirm extends React.PureComponent {
               <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
             </TouchableOpacity>
           </View>
-          {/* <View style={styles.goodsList}>
-            <Text style={styles.goodsTitle}>查看商品详情</Text>
-            <TouchableOpacity onPress={this._toggleShow} style={styles.goodsRight}>
-              <Text style={styles.goodsTotalNum}>8件</Text>
-              {this.state.show ?
-                <Icon style={styles.icon} name="ios-arrow-down-outline" size={22} color="#939393" />
-                :
-                <Icon style={styles.icon} name="ios-arrow-up-outline" size={22} color="#939393" />
-              }
-            </TouchableOpacity>
-          </View> */}
-          {/* <View style={styles.goodsList}>
-            <Text style={styles.goodsTitle}>订单号</Text>
-            <TouchableOpacity onPress={this._toggleShow} style={styles.goodsRight}>
-              <Text style={styles.goodsTotalNum}>DDTYUIBNMGN</Text>
-            </TouchableOpacity>
-          </View> */}
         <View style={styles.btmWrap}>
           <View style={styles.btmItem}>
             <Text style={styles.leftText}>商品总价</Text><Text style={styles.rightText}>¥{feeData && feeData.totalfee}</Text>
@@ -184,14 +223,6 @@ export default class OrderConfirm extends React.PureComponent {
           <View style={styles.btmItem}>
             <View style={styles.leftTextTwo}>
               <Text style={styles.leftText}>运费</Text>
-              {/* <TouchableOpacity
-                onPress={this.showDialog.bind(this)}
-                style={styles.transferFeeTip}
-
-                >
-                  <Icon style={styles.icon} name="ios-information-circle-outline" size={18} color="#5dbb80" />
-                  <Text style={styles.feeExpress}>计费说明</Text>
-              </TouchableOpacity> */}
             </View><Text style={styles.rightText}>¥{feeData && feeData.freightfee}</Text>
           </View>
           <View style={styles.btmItem}>
@@ -201,6 +232,32 @@ export default class OrderConfirm extends React.PureComponent {
             <Text style={styles.leftText}>合计:</Text><Text style={[styles.rightText, styles.rightTextTwo]}>¥{feeData && feeData.finalfee}</Text>
           </View>
         </View>
+        <View style={styles.payArea}>
+          <View style={styles.payLeft}>
+            <Image
+              source={require('../../resources/images/alipay.png')}
+              style={styles.pay}
+            />
+            <View style={styles.payWord}>
+              <Text style={styles.payTitle}>支付宝</Text>
+              <Text style={styles.subTitle}>数亿用户都在用，安全可托付</Text>
+            </View>
+          </View>
+          <TouchableOpacity
+             onPress={this.chooseAlipay.bind(this)}
+            >
+            <View
+              style={styles.clickArea}
+              >
+              {
+                chooseAlipay ?
+                <Icon style={styles.icon} name="ios-checkmark-circle" size={30} color="#f0613a"  backgroundColor="#3b5998"/>
+                :
+                <Icon style={styles.icon} name="ios-radio-button-off-outline" size={30} color="#9a9a9a" backgroundColor="#3b5998"/>
+              }
+            </View>
+          </TouchableOpacity>
+        </View>
 
         </ScrollView>
         <View style={styles.btmBar}>
@@ -209,8 +266,9 @@ export default class OrderConfirm extends React.PureComponent {
             <Text style={styles.payMoney}>¥{feeData && feeData.finalfee}</Text>
           </View>
           <TouchableOpacity
-            style={styles.rightBar}
+            style={[styles.rightBar, (disabled || !chooseAlipay) && styles.disabledBtn]}
             onPress={this.goPay}
+            disabled={disabled || !chooseAlipay}
             >
             <Text style={styles.goPay}>去支付</Text>
             <Icon style={styles.icon} name="ios-play" size={22} color="#fff" />
@@ -222,6 +280,66 @@ export default class OrderConfirm extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+  clickArea: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 60,
+    height: 46,
+    // backgroundColor: 'red',
+  },
+  payLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  payTitle: {
+    fontSize: 14,
+  },
+  subTitle: {
+    fontSize: 12,
+    color: '#8a8a8a',
+    paddingTop: 2,
+    paddingBottom: 2
+  },
+  payWord: {
+    paddingLeft: 10,
+  },
+  pay: {
+    width: 36,
+    height: 36,
+  },
+  payArea: {
+    backgroundColor: '#fff',
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginBottom: 30,
+    paddingLeft: 20,
+    // paddingRight: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  disabledBtn: {
+    backgroundColor: '#e2e2e2',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 46,
+    width: 100,
+  },
+  disabledArea: {
+    backgroundColor: '#fff',
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e2e2e2',
+    borderStyle: 'solid',
+  },
+  disabledTime: {
+    color: '#f5222d',
+    fontSize: 12
+  },
   wrap: {
     // overflow:'scroll',
     // height: 1500
@@ -436,7 +554,7 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   btmWrap: {
-    paddingBottom: 100,
+    paddingBottom: 10,
   },
 
   btmItem: {
@@ -464,4 +582,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
+
 })
