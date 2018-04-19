@@ -13,6 +13,7 @@ import {
  } from 'react-native'
  import Icon from 'react-native-vector-icons/Ionicons'
  import * as actions from '../../actions/login'
+ // import NetError from '../../components/NetError'
 import { withNavigation, NavigationActions} from 'react-navigation'
 
 const { height, width } = Dimensions.get('window')
@@ -22,6 +23,7 @@ const { height, width } = Dimensions.get('window')
   state => ({
     login: state.get('login').get('data'),
     logined: state.get('login').get('logined'),
+    net: state.get('net'),
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -43,6 +45,11 @@ export default class User extends React.PureComponent {
     navigation.navigate('AddressList',{from: 'User'})
   }
 
+  manageInvoice = () => {
+    const { navigation } = this.props
+    navigation.navigate('InvoiceList',{from: 'User'})
+  }
+
   navToHelp = () => {
     const { navigation } = this.props
     navigation.navigate('Help',{from: 'User'})
@@ -58,6 +65,9 @@ export default class User extends React.PureComponent {
   }
   render() {
     const { logined } = this.props
+    // if (!net.get('ok')) {
+    //   return <NetError />
+    // }
     const name = this.props.login && this.props.login.get('name')
     console.warn('name====>', name);
     return (
@@ -150,8 +160,22 @@ export default class User extends React.PureComponent {
             <View style={styles.cellPart}>
                 <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
             </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </View>
+        {/* <View style={[styles.block, styles.blockCell]}>
+          <TouchableOpacity
+            style={styles.arrowBtn}
+            onPress={this.manageInvoice}
+            >
+            <View style={styles.cellPart}>
+              <Icon style={styles.icon} name="ios-paper-outline" size={22} color="#959595" />
+              <Text style={styles.addressInfo}>我的发票</Text>
+            </View>
+            <View style={styles.cellPart}>
+                <Icon style={styles.icon} name="ios-arrow-forward-outline" size={22} color="#959595" />
+            </View>
+          </TouchableOpacity>
+        </View> */}
         <View style={[styles.block, styles.hello]}>
           <TouchableOpacity
             style={styles.arrowBtn}

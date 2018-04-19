@@ -16,11 +16,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withNavigation, NavigationActions } from 'react-navigation'
 import * as actions from '../../actions/search'
+// import NetError from '../../components/NetError'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 @connect(
   state => ({
-    hotSearch: state.get('search').get('hotSearch')
+    hotSearch: state.get('search').get('hotSearch'),
+    net: state.get('net'),
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -94,9 +96,12 @@ export default class Search extends React.PureComponent {
   }
   render() {
     const { hotSearch } = this.props
+    // if (!net.get('ok')) {
+    //   return <NetError />
+    // }
     const data = hotSearch.get('data')
-    console.warn('data.....', data)
-    console.warn('data instanceof Immutable.Map.....', data instanceof Immutable.Map)
+    // console.warn('data.....', data)
+    // console.warn('data instanceof Immutable.Map.....', data instanceof Immutable.Map)
     return (
       <View style={styles.wrap}>
         <View style={styles.searchWrap}>

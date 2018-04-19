@@ -16,8 +16,10 @@ import {
   Keyboard
  } from 'react-native'
  import { SwipeAction } from 'antd-mobile'
+ import { ifIphoneX } from 'react-native-iphone-x-helper'
  import { stringCut } from '../../utils/tools'
  import NoLogin from '../../components/NoLogin'
+ // import NetError from '../../components/NetError'
  import NoData from '../../components/NoData'
  import Loading from '../../components/Loading'
  import * as shopCarActions from '../../actions/shopcar'
@@ -38,6 +40,7 @@ const { height, width } = Dimensions.get('window')
     address: state.get('address').get('getDefault'),
     feeInfo: state.get('fee'),
     logined: state.get('login').get('logined'),
+    net: state.get('net'),
   }),
   dispatch => ({
     actions: bindActionCreators({
@@ -130,24 +133,22 @@ export default class ShoppingCar extends React.PureComponent {
   }
 
   _onDismissed = () => {
-    console.warn('_onDismissed--->');
     Keyboard.dismiss()
   }
 
   _onShown = () => {
     this.input.focus()
-    // this.setState({
-    //
-    // })
   }
 
   _confirmNumber = () => {
     const { text, item } = this.state
     this.props.actions.addLotsGoodsRequested({ goodsid: item.id, goodsnum: text})
+    this.setState({ text: null })
     this.popupDialogGood.dismiss()
   }
 
   _cancelNumber = () => {
+    this.setState({ text: null })
     this.popupDialogGood.dismiss()
   }
 
@@ -160,7 +161,6 @@ export default class ShoppingCar extends React.PureComponent {
   }
 
   deleteOne(id) {
-    console.warn('deleteOne----->');
     this.props.actions.deleteOneGoodOrAllRequested({ id })
   }
 
@@ -176,14 +176,10 @@ export default class ShoppingCar extends React.PureComponent {
           {
             text: '删除',
             onPress: () => this.deleteOne.bind(this, item.id)(),
-            // onPress: () => console.log('DELETE'),
             style: { backgroundColor: '#F4333C', color: 'white' },
           }
         ]}
         autoClose
-        // onOpen={this._onOpen}
-        // close={this.state.flag}
-        // scroll={(scrollEnabled) => { this.setState({ scrollEnabled: false })}}
         >
         <View style={styles.rightItemWrap}>
           <View style={styles.rightItemLeft}>
@@ -221,9 +217,7 @@ export default class ShoppingCar extends React.PureComponent {
           </View>
           <View style={styles.operatorArea}>
 
-            {/* <Icon onPress={this._minusGoods} name="ios-remove-circle-outline" size={24} color="#fa4e4c" /> */}
             <Text style={styles.addNumber}>数量:&nbsp;{item.goodsnum}</Text>
-            {/* <Icon onPress={this._addGoods} name="ios-add-circle" size={24} color="#5dbb80" /> */}
             <TouchableOpacity
               onPress={this._showNumberInput.bind(this, item)}
               >
@@ -251,6 +245,9 @@ export default class ShoppingCar extends React.PureComponent {
 
   render() {
     const { shopcar, address, feeInfo, logined } = this.props
+    // if (!net.get('ok')) {
+    //   return <NetError />
+    // }
     if(!logined) {
       return(
         <NoLogin />
@@ -283,9 +280,12 @@ export default class ShoppingCar extends React.PureComponent {
         onScroll={this._closeSwipe}
         scrollEventThrottle={30}
         onMomentumScrollBegin={() => console.log("start..ScrollView. onMomentumScrollBegin.")}
-        // scrollEnabled={this.state.scrollEnabled}
-        // scrollEnabled={false}
-        style={styles.scrollView}>
+        // contentContainerStyle={{
+        //     flex: 1,
+        //     justifyContent: 'space-between'
+        // }}
+        style={styles.scrollView}
+        >
         <View style={styles.address}>
           <View style={styles.addressLeft}>
             <Icon style={styles.icon} name="ios-locate-outline" size={22} color="#959595" />
@@ -298,7 +298,6 @@ export default class ShoppingCar extends React.PureComponent {
             <Text style={styles.changeAddress}>更换地址</Text>
           </TouchableOpacity>
         </View>
-        {loading && <Loading />}
         {dataJs && dataJs.length > 0 &&
         <FlatList
           style={styles.list}
@@ -306,25 +305,7 @@ export default class ShoppingCar extends React.PureComponent {
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           showsVerticalScrollIndicator={false}
-          // scrollEnabled={this.state.scrollEnabled}
-          //scrollEnabled={false}
-          //onMomentumScrollStart={this._closeSwipe}
-          //onMomentumScrollBegin={() => console.log("start....")}
-          // onScroll={this._closeSwipe}
-          //onScroll={() => console.log('scroll.........')}
-          //onScrollEndDrag={() => console.log("end%%%%%%%%%%%")}
-          //onScrollBeginDrag={() => console.log("start^^^^^^^^^^")}
-          //scrollEnabled={this.state.scrollEnabled}
-          // onEndReached={this._endReach}
-          // onEndReachedThreshold={0.1}
-          // onRefresh={this._onRefresh}
-          // onEndReachedThreshold={0.1}
-          // refreshing={false}
-          // scrollToEnd={this._scrollToEnd}
-          // bounces={false}
           ListHeaderComponent={this._renderHeader.bind(this, dataJs)}
-          // ListFooterComponent={this._renderFooter}
-          // ListEmptyComponent={this._renderPlaceholder}
         />}
       <View style={styles.btmWrap}>
         <View style={styles.btmItem}>
@@ -421,7 +402,7 @@ export default class ShoppingCar extends React.PureComponent {
                 style={styles.operatorPlaceCell}
                 onPress={this._cancelNumber.bind(this)}
                 >
-                <View>
+                <View style={styles.inputBtnWrap}>
                   <Text style={[styles.operatorPlaceCellText, styles.cancelNumber]}>取消</Text>
                 </View>
               </TouchableOpacity>
@@ -429,7 +410,7 @@ export default class ShoppingCar extends React.PureComponent {
                 onPress={this._confirmNumber.bind(this)}
                 style={styles.operatorPlaceCell}
                 >
-                <View>
+                <View style={styles.inputBtnWrap}>
                   <Text style={[styles.operatorPlaceCellText, styles.confirmNumber]}>确认</Text>
                 </View>
               </TouchableOpacity>
@@ -443,6 +424,10 @@ export default class ShoppingCar extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+  inputBtnWrap: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   disabledBtn: {
     backgroundColor: '#e2e2e2',
     flexDirection: 'row',
@@ -459,17 +444,26 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: width,
+    minHeight: height - 144,
     zIndex: -1,
   },
 
   btmBar: {
     position: 'absolute',
-    flex: 1,
+    // zIndex: 1000,
+    // flex: 1,
     width: width,
     backgroundColor: '#fff',
+    // backgroundColor: 'red',
+    // 46 + 52 + 46
     height: 46,
     left: 0,
-    top: height - 164,
+    ...ifIphoneX({
+            bottom: 0,
+            // top: height - 146,
+        }, {
+            bottom: 0
+        }),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -537,7 +531,7 @@ const styles = StyleSheet.create({
 
   list: {
     marginBottom: 20,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
 
   btn: {

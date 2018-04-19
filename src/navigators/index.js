@@ -14,6 +14,8 @@ import User from '../containers/User'
 import Login from '../containers/Login'
 import AddressList from '../containers/AddressList'
 import AddNewAddress from '../containers/AddNewAddress'
+import InvoiceList from '../containers/InvoiceList'
+import AddNewInvoice from '../containers/AddNewInvoice'
 import SearchList from '../containers/SearchList'
 import OrderList from '../containers/OrderList'
 import Test from '../containers/Test/demoa'
@@ -23,6 +25,7 @@ import Law from '../containers/Law'
 import Help from '../containers/Help'
 import PayResult from '../containers/PayResult'
 import AnthorGoodsList from '../containers/AnthorGoodsList'
+import NetHelper from '../components/NetHelper'
 // import Test from '../containers/Test'
 
 const headerConfig = {
@@ -135,9 +138,33 @@ const AddNewAddressStack = StackNavigator({
 const AddressListStack = StackNavigator({
   AddressList: {
     screen: AddressList,
-    path: '/addaddress',
+    path: '/addresslist',
     navigationOptions: {
       title: '地址管理',
+      ...headerConfig,
+      ...addRightToBalance
+    }
+  }
+})
+
+const AddNewInvoiceStack = StackNavigator({
+  addNewInvoice: {
+    screen: AddNewInvoice,
+    path: '/addaddress',
+    navigationOptions: {
+      // title: '新增地址',
+      ...headerConfig,
+      ...addRightToBalance
+    }
+  }
+})
+
+const InvoiceListStack = StackNavigator({
+  InvoiceList: {
+    screen: InvoiceList,
+    path: '/invoicelist',
+    navigationOptions: {
+      title: '发票管理',
       ...headerConfig,
       ...addRightToBalance
     }
@@ -270,6 +297,18 @@ const GoodsListStack = StackNavigator({
   }
 })
 
+const NetHelperStack = StackNavigator({
+  OrderDetail: {
+    screen: NetHelper,
+    path: '/solve',
+    navigationOptions: {
+      title: '解决方案',
+      ...headerConfig,
+      ...addRightToBalance
+    }
+  }
+})
+
 
 const Tabs = TabNavigator(
   {
@@ -348,7 +387,7 @@ const Tabs = TabNavigator(
     tabBarPosition: 'bottom',
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: 'User',
+    initialRouteName: 'Home',
     tabBarOptions: {
       inactiveBackgroundColor: '#fff',
       activeBackgroundColor: '#fff',
@@ -391,6 +430,8 @@ export const Navigator = StackNavigator(
     Login: { screen: LoginStack },
     AddressList: { screen: AddressListStack },
     AddNewAddress: { screen: AddNewAddressStack },
+    InvoiceList: { screen: InvoiceListStack },
+    AddNewInvoice: { screen: AddNewInvoiceStack },
     SearchList: { screen: SearchListStack },
     OrderList: { screen: OrderListStack },
     OrderConfirm: { screen: OrderConfirmStack },
@@ -399,12 +440,14 @@ export const Navigator = StackNavigator(
     Help: { screen: HelpStack },
     PayResult: { screen: PayResultStack },
     AnthorGoodsList: { screen: AnthorGoodsListStack },
+    NetHelper: { screen: NetHelperStack },
   },
   {
     headerMode: 'none',
     // mode: 'modal',
     // initialRouteName: 'PayResult',
     initialRouteName: 'Tabs',
+    // initialRouteName: 'NetHelper',
     cardStyle: {
       // height: 20
     },

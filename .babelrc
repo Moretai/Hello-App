@@ -6,5 +6,10 @@
     ["import", {
       "libraryName": "antd-mobile"
     }]
-  ]
+  ],
+  "env": {
+   "production": {
+     "plugins": ["transform-remove-console"]
+   }
+ }
 }
